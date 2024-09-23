@@ -1,0 +1,88 @@
+/* General Styles */
+body {
+    background-color: #c0ced0; 
+    color: #000000;
+    font-family: 'Arial', sans-serif; 
+    margin: 10;
+    padding: 0;
+    line-height: 1.6;
+}
+
+/* Headings */
+h1 {
+    color: #ff0000;
+    font-size: 2.5em;
+    text-align: center;
+    margin: 20px 0;
+    font-family: 'Verdana', sans-serif; 
+}
+
+h2 {
+    color: #ff0000; 
+    font-size: 2em;
+    margin-top: 30px;
+    border-bottom: 2px solid #ff0000;
+    padding-bottom: 5px;
+}
+
+h3 {
+    color: #ff0000; 
+    font-size: 1.5em;
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+/* Paragraphs */
+p {
+    font-size: 1em;
+    line-height: 1.5em;
+    margin-bottom: 15px;
+    text-align: justify; 
+}
+
+
+/* Tables */
+table {
+    width: 80%;
+    margin: 0 auto 30px auto; /* Center table and add margin-bottom */
+    border: 2px solid #000000; /* Border around the table */
+    border-collapse: collapse; /* Cleaner look */
+}
+
+td {
+    padding: 15px;
+    border: 1px solid #000000; /* Border */
+    vertical-align: top;
+}
+
+
+body {
+    padding: 20px;
+}
+
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 10px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+blockquote {
+    font-style: italic;
+    font-size: 1.5em;
+    margin: 20px 0;
+}
+
+main {
+    margin: 20px;
+}

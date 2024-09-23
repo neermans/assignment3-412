@@ -1,0 +1,11 @@
+<!-- quotes/templates/quotes/quote.html-->
+{% extends 'quotes/base.html' %}
+
+{% block title %}Quote{% endblock %}
+
+{% block content %}
+    <div class="quote-container">
+        <img src="{{ image }}" alt="Michaela DePrince" style="width:500px;height:500px;">
+        <blockquote>{{ quote }}</blockquote>
+    </div>
+{% endblock %}
