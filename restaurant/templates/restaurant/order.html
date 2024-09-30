@@ -1,0 +1,60 @@
+<!-- templates/restaurant/order.html -->
+{% extends 'restaurant/base.html' %}
+
+{% block title %}
+    Restaurant - Order
+{% endblock %}
+
+{% block content %}
+    <h2>Place Your Order Here</h2>
+
+    <form method="POST" action="{% url 'confirmation' %}">
+        {% csrf_token %}
+        
+        <ul><h3>Our Menu</h3></ul>
+        <div>
+            <input type="checkbox" name="items" value='Fried Chicken Plate'> Fried Chicken Plate: ($19.00)
+        </div>
+        <div>
+            <input type="checkbox" name="items" value="Collard Greens"> Collard Greens: ($7.99)
+        </div>
+        <div>
+            <input type="checkbox" name="items" value="Fried Catfish"> Fried Catfish: ($15.00)
+        </div>
+        <div>
+            <input type="checkbox" name="items" value="Grits"> Grits: ($10.99)
+        </div>
+        <div>
+            <input type="checkbox" name="items" value="Potato Casserole"> Potato Casserole: ($14.00)
+        </div>
+
+        <ul><h3>Daily Special:</h3></ul>
+
+        <div>
+            <input type="checkbox" name="items" value="{{ daily_special }}"> {{ daily_special }} (${{ daily_special_price }})
+        </div>
+
+        <ul><h3>Special Instructions</h3></ul>
+        <div><textarea name="special_instructions" placeholder="Special Requests? (Allergies, Preferences)"></textarea></div>
+
+        <ul><h3>Information</h3></ul>
+
+        <div>
+            <label for="name">Name for the Order:</label>
+            <input type="text" name="name" required>
+            </div>
+
+            <div>
+            <label for="phone">Phone Number:</label>
+            <input type="tel" name="phone" required>
+        </div>
+
+            <div>
+            <label for="email">Email:</label>
+            <input type="email" name="email" required>
+        </div>
+
+        <br>
+        <ul><button type="submit">Place Order</button></ul>
+    </form>
+{% endblock %}
