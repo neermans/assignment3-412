@@ -23,7 +23,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("hw/", include("hw.urls")),  ##we create the URL that has this pattern hw/, and associate it with URLS in another file
     path("quotes/", include("quotes.urls")), ## we created the URl that leads to assignment 3 which is quotes/
-    path('restaurant/', include("restaurant.urls")), # we created the URl that leads to assignment 4 which is restaurant/
+    path("restaurant/", include("restaurant.urls")), # we created the URl that leads to assignment 4 which is restaurant/
 ] + static(settings.STATIC_URL, 
            document_root=settings.STATIC_ROOT)
    
