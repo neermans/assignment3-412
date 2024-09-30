@@ -1,0 +1,48 @@
+<!-- templates/restaurant/main.html -->
+<!-- a template that extends the base.html template and fills in the content block with specific page detail -->
+{% extends 'restaurant/base.html' %}
+
+{%load static%}
+
+{% block title %}
+    Restaurant - Main Page
+{% endblock %}
+
+{% block content %}
+    <h2>Shelly's Southern Saloon</h2>
+    <p>Thanks for checking us our darling! We hope to bring you a taste of the south, whether that be because you miss the taste of home or you're searching for something new! </p>
+    <p>Our menu and other optiond are available online here on this website </p>
+
+    <!-- Bootstrap Carousel for slideshow -->
+    <div id="restaurantCarousel" class="carousel slide">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="{% static 'restaurant/restaurant.jpg' %}" class="d-block w-100" alt="Restaurant Picture">
+            </div>
+            <div class="carousel-item">
+                <img src="{% static 'restaurant/catfish.jpg' %}" class="d-block w-100" alt="Catfish Picture">
+            </div>
+            <div class="carousel-item">
+                <img src="{% static 'restaurant/collard_greens.jpg' %}" class="d-block w-100" alt="Collard Greens Picture">
+            </div>
+            <div class="carousel-item">
+                <img src="{% static 'restaurant/fried_chicken.jpg' %}" class="d-block w-100" alt="Fried Chicken Picture">
+            </div>
+            <div class="carousel-item">
+                <img src="{% static 'restaurant/grits.jpg' %}" class="d-block w-100" alt="Grits Picture">
+            </div>
+            <div class="carousel-item">
+                <img src="{% static 'restaurant/potato_casserole.jpg' %}" class="d-block w-100" alt="Potato Casserole Picture">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#restaurantCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#restaurantCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>    
+
+{% endblock %}
