@@ -24,6 +24,8 @@ urlpatterns = [
     path("hw/", include("hw.urls")),  ##we create the URL that has this pattern hw/, and associate it with URLS in another file
     path("quotes/", include("quotes.urls")), ## we created the URl that leads to assignment 3 which is quotes/
     path("restaurant/", include("restaurant.urls")), # we created the URl that leads to assignment 4 which is restaurant/
+    path("blog/", include("blog.urls")), # url for the example we made in class 10/1
+    path('mini_fb/', include("mini_fb.urls")), # url for assigment 5 mini_fb app
 ] + static(settings.STATIC_URL, 
            document_root=settings.STATIC_ROOT)
    
