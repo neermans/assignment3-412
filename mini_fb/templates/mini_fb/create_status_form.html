@@ -1,0 +1,14 @@
+<!-- templates/mini_fb/create_status_form.html -->
+<!-- A template to create a new profile comment that extends base.html-->
+
+{% extends 'mini_fb/base.html' %}
+
+{% block content %}
+    <h2>Post a Status Message</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Post Status</button>
+    </form>
+    <a href="{% url 'show_profile' profile.pk %}">Back to Profile</a>
+{% endblock %}
