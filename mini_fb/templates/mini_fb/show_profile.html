@@ -19,5 +19,7 @@
     {% endfor %}
 </ul>
 
+<a href="{% url 'create_status' profile.pk %}">Post a Status Message</a>
+<br><br>
 <a href="{% url 'show_all_profiles' %}">Back to All Profiles</a>
 {% endblock %}

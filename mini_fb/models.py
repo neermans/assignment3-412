@@ -3,6 +3,7 @@
 
 from django.db import models
 from django.utils import timezone
+from django.urls import reverse
 
 # Profile Model
 class Profile(models.Model):
@@ -18,6 +19,12 @@ class Profile(models.Model):
     # Method to get all status messages for the profile
     def get_status_messages(self):
         return self.statusmessage_set.all().order_by('-timestamp')
+    
+    def get_absolute_url(self):
+        return reverse('show_profile', kwargs={'pk': self.pk})
+    
+    def get_status_messages(self):
+        return self.statusmessage_set.order_by('-timestamp')  # Retrieve status messages by timestamp
 
 
 # StatusMessage Model
