@@ -1,0 +1,23 @@
+<!-- templates/mini_fb/show_profile.html -->
+<!-- A template to show a profile page for one user inheriting from base.html-->
+
+{% extends 'mini_fb/base.html' %}
+
+{% block content %}
+<h2>{{ profile.first_name }} {{ profile.last_name }}'s Profile</h2>
+<img src="{{ profile.profile_image_url }}" alt="Profile Image" width="200">
+<p>City: {{ profile.city }}</p>
+
+<h3>Status Messages</h3>
+<ul>
+    {% for message in profile.get_status_messages %}
+        <li>
+            <strong>{{ message.timestamp }}</strong>: {{ message.message }}
+        </li>
+    {% empty %}
+        <p>No status messages available.</p>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'show_all_profiles' %}">Back to All Profiles</a>
+{% endblock %}
