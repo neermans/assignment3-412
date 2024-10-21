@@ -87,7 +87,7 @@ class DeleteStatusMessageView(DeleteView):
 
 class UpdateStatusMessageView(UpdateView):
     model = StatusMessage
-    fields = ['message']  # Specify fields you want to allow to be updated
+    fields = ['message']  
     template_name = 'mini_fb/update_status_form.html'
 
     def get_success_url(self):
