@@ -36,3 +36,18 @@ class StatusMessage(models.Model):
     def __str__(self):
         # Display the first 30 characters of the message in the admin panel
         return f"Message from {self.profile.first_name}: {self.message[:30]}..."
+    
+    def get_images(self):
+        # Return all related images for this StatusMessage
+        images = Image.objects.filter(status_message=self)
+        return images
+
+# Image Model
+class Image(models.Model):
+    status_message = models.ForeignKey(StatusMessage, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='images/')
+    uploaded_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        # Display the idea of an image 
+        return f"Image for {self.image} uploaded at {self.uploaded_at}"
