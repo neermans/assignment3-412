@@ -13,7 +13,10 @@
     {% for status in status_messages %}
         <li>
             <strong>{{ status.timestamp }}</strong>: {{ status.message }}
+            <!-- update or delete the status message -->
+            <a href="{% url 'update_status' status.pk %}">Update</a>
             
+            <a href="{% url 'delete_status' status.pk %}">Delete</a>
             <!-- Loop through images associated with this status message -->
             {% for img in status.images %}
                 <div>
@@ -28,6 +31,8 @@
 
 
 <a href="{% url 'create_status' profile.pk %}">Post a Status Message</a>
+<br><br>
+<a href="{% url 'update_profile' profile.pk %}">Update Profile</a> 
 <br><br>
 <a href="{% url 'show_all_profiles' %}">Back to All Profiles</a>
 {% endblock %}

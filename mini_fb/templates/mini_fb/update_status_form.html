@@ -1,0 +1,12 @@
+<!-- templates/mini_fb/update_status_form.html -->
+<!-- A template to update a status form that extends base.html-->
+
+{% extends 'mini_fb/base.html' %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Update Message</button>
+</form>
+{% endblock %}
