@@ -10,14 +10,22 @@
 
 <h3>Status Messages</h3>
 <ul>
-    {% for message in profile.get_status_messages %}
+    {% for status in status_messages %}
         <li>
-            <strong>{{ message.timestamp }}</strong>: {{ message.message }}
+            <strong>{{ status.timestamp }}</strong>: {{ status.message }}
+            
+            <!-- Loop through images associated with this status message -->
+            {% for img in status.images %}
+                <div>
+                    <img src="{{ img.image.url }}" alt="Image for {{ status.message }} message" width="200">
+                </div>
+            {% endfor %}
         </li>
     {% empty %}
         <p>No status messages available.</p>
     {% endfor %}
 </ul>
+
 
 <a href="{% url 'create_status' profile.pk %}">Post a Status Message</a>
 <br><br>
