@@ -4,6 +4,7 @@
 from django.db import models
 from django.utils import timezone
 from django.urls import reverse
+from django.db.models import Q
 
 # Profile Model
 class Profile(models.Model):
@@ -60,6 +61,18 @@ class Profile(models.Model):
         # Exclude all current friends from the suggestions
         suggestions = all_profiles.exclude(id__in=current_friends.values_list('id', flat=True))
         return suggestions
+    
+    def get_news_feed(self):
+        # Returns a QuerySet of all status messages for the profile and the profile's friends.# 
+        # Get friend profiles
+        friends = self.get_friends()
+        
+        # Get status messages for this profile and for each friend
+        news_feed = StatusMessage.objects.filter(
+            Q(profile=self) | Q(profile__in=friends)
+        ).order_by('-timestamp')  # Most recent first
+
+        return news_feed
 
 
 # StatusMessage Model

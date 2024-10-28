@@ -1,0 +1,35 @@
+<!-- templates/mini_fb/news_feed.html -->
+<!-- A template to show the news feed of a profile that extends base.html-->
+
+{% extends 'mini_fb/base.html' %}
+
+{% block content %}
+<h2>News Feed for {{ profile.first_name }} {{ profile.last_name }}</h2>
+
+
+<ul>
+    {% for status in news_feed %}
+        <li>
+            <!-- Profile image and name of the poster -->
+            <div style="display: flex; align-items: center;">
+                <a href="{% url 'show_profile' pk=status.profile.pk %}">
+                    <img src="{{ status.profile.profile_image_url }}" alt="{{ status.profile.first_name }}'s Profile Image" width="50">
+                    <strong>{{ status.profile.first_name }} {{ status.profile.last_name }}</strong>
+                </a>
+            </div>
+            <!-- Status message content and timestamp -->
+            <p>{{ status.message }}</p>
+            <small>{{ status.timestamp }}</small>
+            <!-- Display the status image if there is one -->
+            {% if status.image %}
+                <div>
+                    <img src="{{ status.image.url }}" alt="Image for status" width="200">
+                </div>
+            {% endif %}
+        </li>
+        <hr> 
+    {% endfor %}
+</ul>
+
+<a href="{% url 'show_profile' pk=profile.pk %}">Back to Profile</a>
+{% endblock %}
