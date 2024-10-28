@@ -8,6 +8,23 @@
 <img src="{{ profile.profile_image_url }}" alt="Profile Image" width="200">
 <p>City: {{ profile.city }}</p>
 
+<!-- section to show the friends of the specific profile you are on -->
+<h3>Friends of {{ profile.first_name }} {{ profile.last_name }}</h3>
+<ul>
+    <!-- get the full list of friends for this profile, display their image and name where both are links to their page-->
+    {% for friend in profile.get_friends %}
+        <li>
+            <a href="{% url 'show_profile' friend.pk %}">
+                <img src="{{ friend.profile_image_url }}" alt="{{ friend.first_name }}'s Profile Image" width="50">
+                {{ friend.first_name }} {{ friend.last_name }}
+            </a>
+        </li>
+    {% empty %}
+    <!-- if this person has no friends then make sure that is known -->
+        <p>{{ profile.first_name }} has no friends yet.</p>
+    {% endfor %}
+</ul>
+
 <h3>Status Messages</h3>
 <ul>
     {% for status in status_messages %}
