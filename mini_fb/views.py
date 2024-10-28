@@ -124,3 +124,16 @@ class ShowFriendSuggestionsView(DetailView):
         profile = self.get_object()
         context['suggestions'] = profile.get_friend_suggestions()
         return context
+    
+
+# view to show the actual news feed  
+class ShowNewsFeedView(DetailView):
+    model = Profile
+    template_name = 'mini_fb/news_feed.html'
+    context_object_name = 'profile'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        profile = self.get_object()
+        context['news_feed'] = profile.get_news_feed()  # Use the get_news_feed method
+        return context
