@@ -1,6 +1,6 @@
 # mini_fb/views.py
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import *
@@ -84,7 +84,7 @@ class DeleteStatusMessageView(DeleteView):
     def get_success_url(self):
         return reverse('show_profile', kwargs={'pk': self.object.profile.pk}) # Redirect to the profile page after submission
     
-
+#view to update the status message 
 class UpdateStatusMessageView(UpdateView):
     model = StatusMessage
     fields = ['message']  
@@ -92,3 +92,35 @@ class UpdateStatusMessageView(UpdateView):
 
     def get_success_url(self):
         return reverse('show_profile', kwargs={'pk': self.object.profile.pk}) # Redirect to the profile page after submission
+    
+# view to create a new friend 
+class CreateFriendView(CreateView):
+    def dispatch(self, request, *args, **kwargs):
+        pk = kwargs.get('pk')
+        other_pk = kwargs.get('other_pk')
+        
+        # Retrieve the profiles
+        profile = get_object_or_404(Profile, pk=pk)
+        other_profile = get_object_or_404(Profile, pk=other_pk)
+        
+        # Check if trying to add oneself as a friend
+        if profile == other_profile:
+            return redirect('show_profile', pk=pk)  # Redirect back to the profile page if self-adding
+
+        # Add friend
+        profile.add_friend(other_profile)
+        
+        # Redirect to the profile page
+        return redirect('show_profile', pk=pk)
+    
+# view to show friend suggestions of people the user is not already friends with
+class ShowFriendSuggestionsView(DetailView):
+    model = Profile
+    template_name = 'mini_fb/friend_suggestions.html'
+    context_object_name = 'profile'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        profile = self.get_object()
+        context['suggestions'] = profile.get_friend_suggestions()
+        return context

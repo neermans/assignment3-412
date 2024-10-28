@@ -34,6 +34,32 @@ class Profile(models.Model):
         # Combine both lists and retrieve Profile objects
         friend_ids = list(friends_profile1) + list(friends_profile2)
         return Profile.objects.filter(id__in=friend_ids).distinct()
+    
+    def add_friend(self, other):
+        # Making sure the user cannot add themselves as a friend
+        if self == other:
+            raise ValueError("Cannot befriend oneself.")
+
+        # Checking if the friendship already exists in either direction
+        existing_friendship = Friend.objects.filter(
+            models.Q(profile1=self, profile2=other) | 
+            models.Q(profile1=other, profile2=self)
+        ).exists()
+
+        if not existing_friendship:
+            # Create new friendship if it does not exists
+            Friend.objects.create(profile1=self, profile2=other, timestamp=timezone.now())
+        else:
+            # Handle the case where the friendship already exists
+            print("Friendship already exists.")
+
+    def get_friend_suggestions(self):
+        # Returns a QuerySet of profile suggestions for new friends.
+        current_friends = self.get_friends()
+        all_profiles = Profile.objects.exclude(id=self.id)  # Exclude the current profile
+        # Exclude all current friends from the suggestions
+        suggestions = all_profiles.exclude(id__in=current_friends.values_list('id', flat=True))
+        return suggestions
 
 
 # StatusMessage Model
@@ -70,3 +96,4 @@ class Friend(models.Model):
 
     def __str__(self):
         return f"{self.profile1} & {self.profile2}"
+    
