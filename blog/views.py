@@ -7,7 +7,7 @@ from django.views.generic import ListView, DetailView, CreateView
 from .models import * # import all of the models (e.g. Article)
 from blog.forms import * #import the forms (CreateCommentForm)
 from django.urls import reverse
-
+from django.contrib.auth.mixins import LoginRequiredMixin # NEW
 import random
 
 # class-based view
@@ -16,6 +16,10 @@ class ShowAllView(ListView):
     model = Article # the model to display
     template_name = 'blog/show_all.html'
     context_object_name = 'articles' # context variable to use in the template
+
+    def dispatch(self, *args, **kwargs):
+        print(f"ShowAllView.dispatch; self.request.user={self.request.user}")
+        return super().dispatch(*args, **kwargs)
 
 
 
@@ -71,3 +75,5 @@ class CreateCommentView(CreateView):
 
         #delegate work to superclass 
         return super().form_valid(form)
+    
+
