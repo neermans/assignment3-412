@@ -22,8 +22,13 @@
                 <!-- if the user is authenticated, show them whether they are logged in or not-->
                 {% if user.is_authenticated %}
                     <li>Welcome, {{ user.username }}!</li>
+                    <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit">Logout</button>
+                    </form>
                 {% else %}
                     <li>You are not logged in</li>
+                    <li><a href="{% url 'login' %}">Login</a></li>
                 {% endif %}
             </ul>
         </nav>

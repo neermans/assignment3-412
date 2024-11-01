@@ -11,7 +11,7 @@ from django.contrib.auth.models import User # import the User model
 class Profile(models.Model):
 
     # every Article has one User:
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     #data attributes of a profile
     first_name = models.CharField(max_length=50)
