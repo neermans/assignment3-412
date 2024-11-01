@@ -28,13 +28,32 @@ class ShowProfilePageView(DetailView):
         return context
 
 #view to show the create a profile page
-class CreateProfileView(LoginRequiredMixin, CreateView):
+class CreateProfileView(CreateView):
     model = Profile
     form_class = CreateProfileForm
     template_name = 'mini_fb/create_profile_form.html'
-    
-    def get_success_url(self):
-        return reverse('show_profile', kwargs={'pk': self.object.pk})
+    def form_valid(self, form):
+        first_name = form.cleaned_data.get('first_name')
+        last_name = form.cleaned_data.get('last_name')
+
+        username = f"{first_name}{last_name}".lower()
+
+        original_username = username
+        counter = 1
+        while User.objects.filter(username=username).exists():
+            username = f"{original_username}{counter}"
+            counter += 1
+
+        new_user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name)
+
+        form.instance.user = new_user
+        return super().form_valid(form)
+        
+
+    def get_success_url(self) -> str:
+        '''Return the URL to redirect to on success'''
+        return reverse('show_profile', kwargs={'pk': self.object.pk})  # Directly use self.object.pk
+
 
 
 # view to show the create a new message page 
@@ -67,6 +86,10 @@ class CreateStatusMessageView(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse('show_profile', kwargs={'pk': self.kwargs['pk']})  # Redirect to the profile page after submission
     
+    def get_login_url(self) -> str:
+        '''return the URL of the login page'''
+        return reverse('login')
+    
 #view to update the profile selected
 class UpdateProfileView(LoginRequiredMixin, UpdateView):
     model = Profile
@@ -75,6 +98,10 @@ class UpdateProfileView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse('show_profile', kwargs={'pk': self.kwargs['pk']})  # Redirect to the profile page after submission
+    
+    def get_login_url(self) -> str:
+        '''return the URL of the login page'''
+        return reverse('login')
     
 #view to delete a status message
 class DeleteStatusMessageView(LoginRequiredMixin, DeleteView):
@@ -85,6 +112,10 @@ class DeleteStatusMessageView(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         return reverse('show_profile', kwargs={'pk': self.object.profile.pk}) # Redirect to the profile page after submission
     
+    def get_login_url(self) -> str:
+        '''return the URL of the login page'''
+        return reverse('login')
+    
 #view to update the status message 
 class UpdateStatusMessageView(LoginRequiredMixin, UpdateView):
     model = StatusMessage
@@ -93,6 +124,10 @@ class UpdateStatusMessageView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse('show_profile', kwargs={'pk': self.object.profile.pk}) # Redirect to the profile page after submission
+    
+    def get_login_url(self) -> str:
+        '''return the URL of the login page'''
+        return reverse('login')
     
 # view to create a new friend 
 class CreateFriendView(LoginRequiredMixin, CreateView):
@@ -114,6 +149,10 @@ class CreateFriendView(LoginRequiredMixin, CreateView):
         # Redirect to the profile page
         return redirect('show_profile', pk=pk)
     
+    def get_login_url(self) -> str:
+        '''return the URL of the login page'''
+        return reverse('login')
+    
 # view to show friend suggestions of people the user is not already friends with
 class ShowFriendSuggestionsView(LoginRequiredMixin, DetailView):
     model = Profile
@@ -125,6 +164,10 @@ class ShowFriendSuggestionsView(LoginRequiredMixin, DetailView):
         profile = self.get_object()
         context['suggestions'] = profile.get_friend_suggestions()
         return context
+    
+    def get_login_url(self) -> str:
+        '''return the URL of the login page'''
+        return reverse('login')
     
 
 # view to show the actual news feed  
@@ -138,3 +181,7 @@ class ShowNewsFeedView(LoginRequiredMixin, DetailView):
         profile = self.get_object()
         context['news_feed'] = profile.get_news_feed()  # Use the get_news_feed method
         return context
+    
+    def get_login_url(self) -> str:
+        '''return the URL of the login page'''
+        return reverse('login')
