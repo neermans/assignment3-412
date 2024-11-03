@@ -4,6 +4,7 @@
 {% extends 'mini_fb/base.html' %}
 
 {% block content %}
+<!-- allows users to make status messages on their profile, adding pictures too-->
     <h2>Post a Status Message</h2>
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
