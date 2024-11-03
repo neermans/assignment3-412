@@ -16,7 +16,7 @@
             {{ suggestion.first_name }} {{ suggestion.last_name }}
         </a>
         <!-- a button to allow the user to add them as a friend-->
-        <a href="{% url 'add_friend' pk=profile.pk other_pk=suggestion.pk %}" class="btn btn-primary">Add Friend</a>
+        <a href="{% url 'add_friend' other_pk=suggestion.pk %}" class="btn btn-primary">Add Friend</a>
 
     </li>
     {% empty %}
