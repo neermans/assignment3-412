@@ -26,6 +26,7 @@ urlpatterns = [
     path("restaurant/", include("restaurant.urls")), # we created the URl that leads to assignment 4 which is restaurant/
     path("blog/", include("blog.urls")), # url for the example we made in class 10/1
     path('mini_fb/', include("mini_fb.urls")), # url for assigment 5 mini_fb app
+    path('mar_analytics/', include("mar_analytics.urls")), # url for assigment 5 mini_fb app
 ] + static(settings.STATIC_URL, 
            document_root=settings.STATIC_ROOT)
    
