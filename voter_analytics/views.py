@@ -4,6 +4,8 @@ from .models import *
 import plotly.express as px
 import plotly.io as pio
 from django.utils.safestring import mark_safe
+from datetime import datetime
+
 
 # Create your views here
 
@@ -22,7 +24,24 @@ class VoterListView(ListView):
         # get filters from request parameters
         party_affiliation = self.request.GET.get('party_affiliation')
         min_dob = self.request.GET.get('min_dob')
+        if min_dob:
+            # Convert year to a full date (January 1 of the selected year)
+            try:
+                min_dob_date = datetime.strptime(min_dob, "%Y").replace(month=1, day=1)
+                queryset = queryset.filter(date_of_birth__gte=min_dob_date)
+            except ValueError:
+                pass  # Ignore if date parsing fails
+
         max_dob = self.request.GET.get('max_dob')
+        if max_dob:
+            # Convert year to a full date (December 31 of the selected year)
+            try:
+                max_dob_date = datetime.strptime(max_dob, "%Y").replace(month=12, day=31)
+                queryset = queryset.filter(date_of_birth__lte=max_dob_date)
+            except ValueError:
+                pass  # Ignore if date parsing fails
+
+
         voter_score = self.request.GET.get('voter_score')
         elections = {
             'v20state': self.request.GET.get('v20state'),
@@ -35,12 +54,6 @@ class VoterListView(ListView):
         # Apply filters
         if party_affiliation:
             queryset = queryset.filter(party_affiliation=party_affiliation)
-        
-        if min_dob:
-            queryset = queryset.filter(date_of_birth__gte=min_dob)
-        
-        if max_dob:
-            queryset = queryset.filter(date_of_birth__lte=max_dob)
         
         if voter_score:
             queryset = queryset.filter(voter_score=voter_score)
@@ -56,7 +69,7 @@ class VoterListView(ListView):
         context = super().get_context_data(**kwargs)
         
         # additional context for the filter form
-        context['party_affiliations'] = Voter._meta.get_field('party_affiliation').choices
+        context['party_affiliations'] = Voter.PARTY_AFFILIATION_CHOICES
         context['years'] = range(1900, 2024)  # range of years for date of birth filter
         context['voter_scores'] = Voter.objects.values_list('voter_score', flat=True).distinct().order_by('voter_score')
         
@@ -99,10 +112,18 @@ class GraphsView(ListView):
             queryset = queryset.filter(party_affiliation=party_affiliation)
         
         if min_dob:
-            queryset = queryset.filter(date_of_birth__gte=min_dob)
-        
+            try:
+                min_dob_date = datetime.strptime(min_dob, "%Y").replace(month=1, day=1)
+                queryset = queryset.filter(date_of_birth__gte=min_dob_date)
+            except ValueError:
+                pass  # Ignore if date parsing fails
+
         if max_dob:
-            queryset = queryset.filter(date_of_birth__lte=max_dob)
+            try:
+                max_dob_date = datetime.strptime(max_dob, "%Y").replace(month=12, day=31)
+                queryset = queryset.filter(date_of_birth__lte=max_dob_date)
+            except ValueError:
+                pass  # Ignore if date parsing fails
         
         if voter_score:
             queryset = queryset.filter(voter_score=voter_score)
