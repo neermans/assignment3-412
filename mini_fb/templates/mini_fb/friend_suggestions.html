@@ -1,0 +1,29 @@
+<!-- templates/mini_fb/friend_suggestions.html -->
+<!-- A template to show all profiles that are recommended as friends that extends base.html-->
+
+
+{% extends 'mini_fb/base.html' %}
+
+{% block content %}
+<h2>Friend Suggestions for {{ profile.first_name }} {{ profile.last_name }}</h2>
+
+<ul>
+    {% for suggestion in suggestions %}
+    <li>
+        <!-- show the profile picture and name of each person that is a friend suggestion-->
+        <a href="{% url 'show_profile' suggestion.pk %}">
+            <img src="{{ suggestion.profile_image_url }}" alt="{{ suggestion.first_name }}'s Profile Image" width="50">
+            {{ suggestion.first_name }} {{ suggestion.last_name }}
+        </a>
+        <!-- a button to allow the user to add them as a friend-->
+        <a href="{% url 'add_friend' other_pk=suggestion.pk %}" class="btn btn-primary">Add Friend</a>
+
+    </li>
+    {% empty %}
+    <!-- if they are friends with all users, show this-->
+    <li>No suggestions available, you're friends with everyone!</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'show_profile' pk=profile.pk %}">Back to Profile</a>
+{% endblock %}

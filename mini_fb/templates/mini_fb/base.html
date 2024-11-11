@@ -1,0 +1,42 @@
+<!-- templates/mini_fb/base.html -->
+<!-- a template with common HTML code that will be re-used by all of the other templates-->
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Shelly's Mini FaceBook</title>
+        <link rel="stylesheet" href="/static/mini_fb/styles.css">
+    </head>
+
+    <header>
+        <h1>Shelly's Mini Facebook</h1>
+    </header>
+
+    <body>
+        <nav>
+            <ul>
+                <li><a href="{% url 'show_all_profiles' %}">Home</a></li>
+                <li><a href="{% url 'show_all_profiles' %}">Show All Profiles</a></li>
+                <li><a href="{% url 'create_profile' %}">Create New Profile</a></li>
+
+                <!-- if the user is authenticated, show them whether they are logged in or not-->
+                {% if user.is_authenticated %}
+                    <li>Welcome, {{ user.username }}!</li>
+                    <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit">Logout</button>
+                    </form>
+                {% else %}
+                    <li>You are not logged in</li>
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        
+        {% block content %}
+        <!-- specific page detail -->
+        {% endblock %}
+
+    </body>
+
+</html>

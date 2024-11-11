@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-m%brdm=f93y7en1h)^2kox(7bw_j48cm=ji9^@65*f^$30$^ml
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -40,6 +40,10 @@ INSTALLED_APPS = [
     "hw", ##new app
     "quotes", ##new app
     "restaurant", #new app
+    "blog", ## in class 10/1
+    "mini_fb", ##new app assignment 5
+    "mar_analytics", ## new marathon analytics app!
+    "voter_analytics", ## Assignment 10 new app
 ]
 
 MIDDLEWARE = [
@@ -123,5 +127,8 @@ STATICFILES_DIRS = [
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
