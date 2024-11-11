@@ -1,0 +1,23 @@
+<!-- templates/mini_fb/create_profile_form.html -->
+<!-- A template to create a new profile that extends base.html-->
+
+{% extends 'mini_fb/base.html' %}
+
+{% block content %}
+<h2>Create Your Profile</h2>
+
+<form method="post">
+    {% csrf_token %}
+    
+    <!-- User creation form fields -->
+    <h3>User Registration</h3>
+    {{ user_form.as_p }}
+
+    <!-- Profile creation form fields -->
+    <h3>Profile Information</h3>
+    {{ form.as_p }}
+
+    <button type="submit">Create Profile</button>
+</form>
+
+{% endblock %}

@@ -7,8 +7,9 @@ name = "pypi"
 django = "*"
 gunicorn = "*"
 django-heroku = "*"
+pillow = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.10"
+python_version = "3.11"

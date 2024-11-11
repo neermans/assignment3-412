@@ -1,0 +1,10 @@
+<!-- mini_fb/templates/mini_fb/logged_out.html -->
+ <!-- a template that shows the logged out page that extends base.html-->
+{% extends 'mini_fb/base.html' %}
+
+{% block content %}
+<!-- shows the user that they have logged out, gives them links to either log in, or see all profiles-->
+<h2>You have been logged out</h2>
+<p>You have successfully logged out of your account.</p>
+<a href="{% url 'login' %}">Log in again</a> or <a href="{% url 'show_all_profiles' %}">return to the homepage</a>.
+{% endblock %}
