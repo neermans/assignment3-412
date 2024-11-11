@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     "restaurant", #new app
     "blog", ## in class 10/1
     "mini_fb", ##new app assignment 5
+    "mar_analytics", ## new marathon analytics app!
+    "voter_analytics", ## Assignment 10 new app
 ]
 
 MIDDLEWARE = [
