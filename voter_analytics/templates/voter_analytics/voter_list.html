@@ -13,7 +13,7 @@
     <form method="get">
         <label for="party_affiliation">Party Affiliation:</label>
         <select name="party_affiliation" id="party_affiliation">
-            <option value="">Any</option>
+            <option value="">All</option>
             {% for code, name in party_affiliations %}
                 <option value="{{ code }}" {% if request.GET.party_affiliation == code %}selected{% endif %}>{{ name }}</option>
             {% endfor %}
@@ -23,15 +23,16 @@
         <select name="min_dob" id="min_dob">
             <option value="">Any</option>
             {% for year in years %}
-                <option value="{{ year }}-01-01" {% if request.GET.min_dob == year|stringformat:"-01-01" %}selected{% endif %}>{{ year }}</option>
+                <option value="{{ year }}" {% if request.GET.min_dob == year|stringformat:"s" %}selected{% endif %}>{{ year }}</option>
             {% endfor %}
         </select>
-
+    
+        <!-- Maximum Date of Birth (Year) Dropdown -->
         <label for="max_dob">Maximum Date of Birth:</label>
         <select name="max_dob" id="max_dob">
             <option value="">Any</option>
             {% for year in years %}
-                <option value="{{ year }}-12-31" {% if request.GET.max_dob == year|stringformat:"-12-31" %}selected{% endif %}>{{ year }}</option>
+                <option value="{{ year }}" {% if request.GET.max_dob == year|stringformat:"s" %}selected{% endif %}>{{ year }}</option>
             {% endfor %}
         </select>
 
@@ -93,10 +94,7 @@
                     <a href="?{% for k, v in request.GET.items %}{% if k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}page={{ voters.previous_page_number }}">previous</a>
                 {% endif %}
     
-                <span class="current">
-                    Page {{ voters.number }} of {{ voters.paginator.num_pages }}
-                </span>
-    
+
                 {% if voters.has_next %}
                     <a href="?{% for k, v in request.GET.items %}{% if k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}page={{ voters.next_page_number }}">next</a>
                     <a href="?{% for k, v in request.GET.items %}{% if k != 'page' %}{{ k }}={{ v }}&{% endif %}{% endfor %}page={{ voters.paginator.num_pages }}">last &raquo;</a>

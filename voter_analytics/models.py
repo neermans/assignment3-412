@@ -19,7 +19,24 @@ class Voter(models.Model):
     # registration and voting information
     date_of_birth = models.DateField()  # date of birth
     registration_date = models.DateField()  #date of regsitration
-    party_affiliation = models.CharField(max_length=1, choices=[('D', 'Democrat'), ('R', 'Republican'), ('U', 'Unaffiliated'), ('O', 'Other')])  # party affiliation
+    PARTY_AFFILIATION_CHOICES = [
+        ('D', 'Democratic'),
+        ('R', 'Republican'),
+        ('CC', 'Constitution Party'),
+        ('L', 'Libertarian Party'),
+        ('T', 'Tea Party'),
+        ('O', 'Other'),
+        ('G', 'Green Party'),
+        ('J', 'Independent Party'),
+        ('Q', 'Reform Party'),
+        ('FF', 'Freedom Party')
+    ]
+    
+    party_affiliation = models.CharField(
+        max_length=2, 
+        choices=PARTY_AFFILIATION_CHOICES,
+        blank=True
+    )
 
 
     # voting history 
