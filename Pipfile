@@ -9,6 +9,9 @@ gunicorn = "*"
 django-heroku = "*"
 pillow = "*"
 pandas = "*"
+plotly = "*"
+numpy = "*"
+
 
 [dev-packages]
 
