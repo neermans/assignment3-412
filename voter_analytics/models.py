@@ -51,9 +51,12 @@ class Voter(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name} - {self.party_affiliation}"
 
-    def load_data(file_path):
+    def load_data():
         ''' load voter data fromt he CSV into the database '''
-        data = pd.read_csv(file_path)
+        Voter.objects.all().delete()
+
+        data = pd.read_csv('../newton_voters.csv')
+
         for _, row in data.iterrows():
             try:
                 # Check if `party_affiliation` is a valid string, then strip; otherwise, default to an empty string
