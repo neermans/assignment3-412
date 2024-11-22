@@ -1,0 +1,14 @@
+{% extends 'project/base.html' %}
+
+{% block content %}
+  <h2>Profile: {{ profile.name }}</h2>
+  <p><strong>Bio:</strong> {{ profile.bio }}</p>
+  <p><strong>Job History:</strong> {{ profile.job_history }}</p>
+  <p><strong>Preferred Styles:</strong>
+    <ul>
+      {% for style in profile.preferred_styles.all %}
+        <li>{{ style.name }}</li>
+      {% endfor %}
+    </ul>
+  </p>
+{% endblock %}
