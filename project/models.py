@@ -1,6 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
+
+
 
 # Create your models here.
 
@@ -47,20 +51,15 @@ class DanceStyle(models.Model):
 
 
 class DancePost(models.Model):
+    poster = models.ForeignKey(User, on_delete=models.CASCADE, related_name='dance_posts')  # Reference to User
     video = models.FileField(upload_to='videos/', blank=True, null=True)
     cut_music = models.FileField(upload_to='music/', blank=True, null=True)
     description = models.TextField()
-    poster = models.ForeignKey(DancerProfile, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        if self.video:
-            return f"Video Post by {self.poster.name}"
-        elif self.cut_music:
-            return f"Music Post by {self.poster.name}"
-        else:
-            return f"Post by {self.poster.name}"
-        
+        return f"Post by {self.poster.username}"
+
 
 class PrivateMessage(models.Model):
     sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
@@ -87,3 +86,12 @@ class CommentBoardPost(models.Model):
 
     def __str__(self):
         return f"{self.get_post_type_display()} by {self.author} "
+
+class Comment(models.Model):
+    post = models.ForeignKey('CommentBoardPost', on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Comment by {self.author.username} on {self.post}"

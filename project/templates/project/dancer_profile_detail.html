@@ -18,6 +18,40 @@
 {% endif %}
 
 
+<h2>Dance Posts</h2>
+<ul>
+    {% for post in dance_posts %}
+        <li>
+            <strong>{{ post.description }}</strong>
+            {% if post.video %}
+                <a href="{{ post.video.url }}">View Video</a>
+            {% endif %}
+            {% if post.cut_music %}
+                <a href="{{ post.cut_music.url }}">View Music</a>
+            {% endif %}
+            {% if is_own_profile %}
+                <a href="{% url 'edit_dance_post' post.pk %}" class="btn btn-primary">Edit</a>
+            {% endif %}
+        </li>
+    {% empty %}
+        <li>No dance posts available.</li>
+    {% endfor %}
+</ul>
+
+<h2>Comment Board Posts</h2>
+<ul>
+    {% for post in comment_board_posts %}
+        <li>
+            <strong>{{ post.get_post_type_display }}</strong>: {{ post.content }}
+            {% if is_own_profile %}
+                <a href="{% url 'edit_comment_post' post.pk %}" class="btn btn-primary">Edit</a>
+            {% endif %}
+        </li>
+    {% empty %}
+        <li>No comment board posts available.</li>
+    {% endfor %}
+</ul>
+
 <!-- update profile if you are the one logged in -->
 
 {% if request.user == profile.dancerUser %}
@@ -25,6 +59,8 @@
 {% elif request.user == profile.recruiterUser %}
     <a href="{% url 'edit_recruiter_profile' profile.pk %}" class="btn btn-primary">Edit Profile</a>
 {% endif %}
+
+<a href="{% url 'profile_list' %}" class="btn btn-secondary">Back to All Profiles</a>
 
 <a href="{% url 'blog_home' %}">Back to Blog Home</a>
 

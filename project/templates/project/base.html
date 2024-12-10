@@ -2,10 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}My Django App{% endblock %}</title>
+    <title>{% block title %}Dance Galore{% endblock %}</title>
+    <link rel="stylesheet" href="/static/project/styles.css">
 </head>
 <body>
-    {% block content %}
-    {% endblock %}
+
+    <header>
+        <div class="header-container">
+            <h1><a href="{% url 'blog_home' %}">Dance Galore</a></h1>
+            
+        </div>
+    </header>
+    
+
+    
+    <main>
+        {% block content %}{% endblock %}
+    </main>
 </body>
 </html>

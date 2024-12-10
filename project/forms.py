@@ -34,3 +34,8 @@ class CommentBoardPostForm(forms.ModelForm):
     class Meta:
         model = CommentBoardPost
         fields = ['content', 'post_type']
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']

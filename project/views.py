@@ -18,18 +18,53 @@ class BlogHomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # Fetch posts for videos and music
+        # Fetch dance posts (videos and music)
         context['dance_posts'] = DancePost.objects.filter(
             Q(video__isnull=False) | Q(cut_music__isnull=False)
-        ).order_by('-created_at')  # Combine videos and music
+        ).order_by('-created_at')
 
-        # Fetch general posts from the CommentBoardPost model
+        # Group CommentBoardPosts by type
         context['general_posts'] = CommentBoardPost.objects.filter(
             post_type=CommentBoardPost.PostType.GENERAL
-        ).order_by('-id')  # Order by newest first
+        ).order_by('-id')
+        context['job_openings'] = CommentBoardPost.objects.filter(
+            post_type=CommentBoardPost.PostType.JOB_OPENING
+        ).order_by('-id')
+        context['public_classes'] = CommentBoardPost.objects.filter(
+            post_type=CommentBoardPost.PostType.PUBLIC_CLASS
+        ).order_by('-id')
+
+        # Add the comment form
+        context['comment_form'] = CommentForm()
+
+        if self.request.user.is_authenticated:
+            if hasattr(self.request.user, 'dancer_profile'):
+                context['profile_image'] = self.request.user.dancer_profile.image
+                context['profile_url'] = reverse('dancer_profile_detail', kwargs={'pk': self.request.user.dancer_profile.pk})
+            elif hasattr(self.request.user, 'recruiter_profile'):
+                context['profile_image'] = self.request.user.recruiter_profile.image
+                context['profile_url'] = reverse('recruiter_profile_detail', kwargs={'pk': self.request.user.recruiter_profile.pk})
+
 
         return context
-   
+
+    def post(self, request, *args, **kwargs):
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            post_id = request.POST.get('post_id')  # Hidden input for post ID
+            post = CommentBoardPost.objects.get(id=post_id)
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.save()
+            return redirect('blog_home')  # Replace 'blog_home' with the actual name of your blog home URL
+
+        # Re-render the page with the form errors
+        context = self.get_context_data(**kwargs)
+        context['comment_form'] = form
+        return self.render_to_response(context)
+    
+
 class CreateDancerProfileView(CreateView):
     model = DancerProfile
     form_class = CreateDancerProfileForm
@@ -65,12 +100,32 @@ class ProfileListView(TemplateView):
         context['dancers'] = DancerProfile.objects.all()  # Query all dancers
         context['recruiters'] = RecruiterProfile.objects.all()  # Query all recruiters
         return context
+    
 
 class DancerProfileDetailView(LoginRequiredMixin, DetailView):
     model = DancerProfile
     template_name = 'project/dancer_profile_detail.html'
     context_object_name = 'profile'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        profile = self.get_object()
+
+        # Fetch the dancer's posts
+        context['dance_posts'] = DancePost.objects.filter(
+            poster=profile.dancerUser
+        ).order_by('-created_at')
+
+        # Fetch comment board posts authored by this user's profile
+        context['comment_board_posts'] = CommentBoardPost.objects.filter(
+            author=profile.dancerUser
+        ).order_by('-id')
+
+        context['is_own_profile'] = profile.dancerUser == self.request.user
+
+
+        return context
+   
 
 class CreateRecruiterProfileView(CreateView):
     model = RecruiterProfile
@@ -104,6 +159,26 @@ class RecruiterProfileDetailView(LoginRequiredMixin, DetailView):
     template_name = 'project/recruiter_profile_detail.html'
     context_object_name = 'profile'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        profile = self.get_object()
+
+        # Fetch dance posts by this user's profile
+        context['dance_posts'] = DancePost.objects.filter(
+            poster=profile.recruiterUser
+        ).order_by('-created_at')
+
+        # Fetch comment board posts authored by this user's profile
+        context['comment_board_posts'] = CommentBoardPost.objects.filter(
+            author=profile.recruiterUser
+        ).order_by('-id')
+
+        # Add a flag for own profile
+        context['is_own_profile'] = profile.recruiterUser == self.request.user
+
+        return context
+
+
 class SendMessageView(LoginRequiredMixin, FormView):
     template_name = 'project/send_message.html'
     form_class = PrivateMessageForm
@@ -113,37 +188,35 @@ class SendMessageView(LoginRequiredMixin, FormView):
         receiver_id = self.kwargs['receiver_id']
         receiver = get_object_or_404(User, pk=receiver_id)
 
-        # Add receiver profiles to context
-        context['receiver'] = receiver
-        context['dancer_profile'] = getattr(receiver, 'dancer_profile', None)
-        context['recruiter_profile'] = getattr(receiver, 'recruiter_profile', None)
+        # Determine the receiver's profile type
+        if hasattr(receiver, 'dancer_profile'):
+            context['receiver_profile_type'] = 'dancer'
+            context['receiver_profile_pk'] = receiver.dancer_profile.pk
+        elif hasattr(receiver, 'recruiter_profile'):
+            context['receiver_profile_type'] = 'recruiter'
+            context['receiver_profile_pk'] = receiver.recruiter_profile.pk
 
-        # Fetch messages between the logged-in user and the receiver
+        context['receiver'] = receiver
         context['messages'] = PrivateMessage.objects.filter(
             Q(sender=self.request.user, receiver=receiver) |
             Q(sender=receiver, receiver=self.request.user)
         )
+
         return context
 
     def form_valid(self, form):
         receiver_id = self.kwargs['receiver_id']
         receiver = get_object_or_404(User, pk=receiver_id)
 
-        # Prevent sending a message to yourself
-        if receiver == self.request.user:
-            if hasattr(receiver, 'dancer_profile'):
-                return redirect('dancer_profile_detail', pk=receiver.dancer_profile.pk)
-            elif hasattr(receiver, 'recruiter_profile'):
-                return redirect('recruiter_profile_detail', pk=receiver.recruiter_profile.pk)
-
         # Save the new message
         form.instance.sender = self.request.user
         form.instance.receiver = receiver
         form.save()
 
-        # Redirect back to the same messaging page
-        return redirect('send_message', receiver_id=receiver.pk)
-    
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return self.request.path 
 
 
 class EditRecruiterProfileView(LoginRequiredMixin, UpdateView):
@@ -182,27 +255,25 @@ class EditDancerProfileView(LoginRequiredMixin, UpdateView):
 class CreateDancePostView(LoginRequiredMixin, CreateView):
     model = DancePost
     fields = ['video', 'cut_music', 'description']
-    template_name = 'blog/create_dance_post.html'
+    template_name = 'project/create_dance_post.html'
 
     def form_valid(self, form):
-        # Ensure the logged-in user has a DancerProfile
-        try:
-            dancer_profile = self.request.user.dancer_profile
-        except DancerProfile.DoesNotExist:
-            return redirect('error_page')  # Replace with a proper error page or message
-        # Assign the logged-in user's DancerProfile as the poster
-        form.instance.poster = dancer_profile
+        # Set the poster to the logged-in user
+        form.instance.poster = self.request.user
         return super().form_valid(form)
 
     def get_success_url(self):
-        return redirect('blog_home')  # Replace with the desired success redirect URL
-    
-
+        # Redirect to the appropriate profile
+        if hasattr(self.request.user, 'dancer_profile'):
+            return reverse('dancer_profile_detail', kwargs={'pk': self.request.user.dancer_profile.pk})
+        elif hasattr(self.request.user, 'recruiter_profile'):
+            return reverse('recruiter_profile_detail', kwargs={'pk': self.request.user.recruiter_profile.pk})
+        return reverse('blog_home')
 
 class CreateCommentBoardPostView(LoginRequiredMixin, CreateView):
     model = CommentBoardPost
     fields = ['content', 'post_type']
-    template_name = 'blog/create_comment_post.html'
+    template_name = 'project/create_comment_post.html'
 
     def form_valid(self, form):
         # Assign the logged-in user as the author
@@ -210,4 +281,73 @@ class CreateCommentBoardPostView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return redirect('blog_home')  # Replace with the desired success redirect URL
+        return reverse('blog_home')  # Replace with the desired success redirect URL
+    
+
+class EditDancePostView(LoginRequiredMixin, UpdateView):
+    model = DancePost
+    fields = ['video', 'cut_music', 'description']
+    template_name = 'project/edit_dance_post.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        post = self.get_object()
+
+        # Check if the user is the author of the post
+        if post.poster == request.user:
+            # Redirect based on user type
+            if hasattr(request.user, 'recruiter_profile'):
+                return super().dispatch(request, *args, **kwargs)
+            elif hasattr(request.user, 'dancer_profile'):
+                return super().dispatch(request, *args, **kwargs)
+        
+        # If not the author, redirect to their respective profile
+        if hasattr(request.user, 'recruiter_profile'):
+            return redirect('recruiter_profile_detail', pk=request.user.recruiter_profile.pk)
+        elif hasattr(request.user, 'dancer_profile'):
+            return redirect('dancer_profile_detail', pk=request.user.dancer_profile.pk)
+        
+        # As a fallback, redirect to a safe default page
+        return redirect('blog_home')
+
+    def get_success_url(self):
+        # Redirect to the appropriate profile page after editing
+        if hasattr(self.request.user, 'recruiter_profile'):
+            return reverse('recruiter_profile_detail', kwargs={'pk': self.request.user.recruiter_profile.pk})
+        elif hasattr(self.request.user, 'dancer_profile'):
+            return reverse('dancer_profile_detail', kwargs={'pk': self.request.user.dancer_profile.pk})
+        return reverse('blog_home')  # Default fallback
+    
+
+class EditCommentBoardPostView(LoginRequiredMixin, UpdateView):
+    model = CommentBoardPost
+    fields = ['content', 'post_type']
+    template_name = 'project/edit_comment_post.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        post = self.get_object()
+
+        # Check if the user is the author of the post
+        if post.author == request.user:
+            # Redirect based on user type
+            if hasattr(request.user, 'recruiter_profile'):
+                return super().dispatch(request, *args, **kwargs)
+            elif hasattr(request.user, 'dancer_profile'):
+                return super().dispatch(request, *args, **kwargs)
+        
+        # If not the author, redirect to their respective profile
+        if hasattr(request.user, 'recruiter_profile'):
+            return redirect('recruiter_profile_detail', pk=request.user.recruiter_profile.pk)
+        elif hasattr(request.user, 'dancer_profile'):
+            return redirect('dancer_profile_detail', pk=request.user.dancer_profile.pk)
+        
+        # As a fallback, redirect to a safe default page
+        return redirect('blog_home')
+
+    def get_success_url(self):
+        # Redirect to the appropriate profile page after editing
+        if hasattr(self.request.user, 'recruiter_profile'):
+            return reverse('recruiter_profile_detail', kwargs={'pk': self.request.user.recruiter_profile.pk})
+        elif hasattr(self.request.user, 'dancer_profile'):
+            return reverse('dancer_profile_detail', kwargs={'pk': self.request.user.dancer_profile.pk})
+        return reverse('blog_home')  # Default fallback
+    

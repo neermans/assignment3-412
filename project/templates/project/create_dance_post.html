@@ -1,7 +1,9 @@
-{% extends 'base.html' %}
+{% extends 'project/base.html' %}
 
 {% block content %}
 <h1>Create a Dance Post</h1>
+<h2>All videos must be submitted in an MP4 format or other dancers and choreographers will not be able to see your beautiful post!</h2>
+<h2>All audios must be submitted in an MP3 format as well!</h2>
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}

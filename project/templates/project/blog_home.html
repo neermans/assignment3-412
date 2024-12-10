@@ -4,6 +4,14 @@
 <h1>Welcome to the Dance Blog</h1>
 
 <!-- Navigation Bar -->
+{% if user.is_authenticated %}
+<div class="profile-picture">
+    <a href="{{ profile_url }}">
+        <img src="{{ profile_image }}" alt="Profile Picture">
+    </a>
+</div>
+{% endif %}
+
 <div>
     {% if user.is_authenticated %}
         <p>You are currently logged in as {{ user.username }}.</p>
@@ -17,6 +25,10 @@
     {% endif %}
 </div>
 <hr>
+
+<div>
+    <li><a href="{% url 'create_dance_post' %}">Create Dance Post</a></li>
+</div>
 
 <!-- Videos and Music Section -->
 <h2>Videos and Music</h2>
@@ -37,28 +49,71 @@
         <p>No video or music posts available.</p>
     {% endfor %}
 </div>
+
+
 <!-- Comment Board Posts Section -->
-<h2>Comment Board Posts</h2>
 <div>
-    {% for post in comment_board_posts %}
-        <div>
-            <h3>
-                {% if post.post_type == "JO" %}
-                    [Job Opening]
-                {% elif post.post_type == "PC" %}
-                    [Public Class]
-                {% else %}
-                    [General Post]
-                {% endif %}
-            </h3>
-            <p>{{ post.content }}</p>
-            <p>Posted by: {{ post.author.username }}</p>
-        </div>
-        <hr>
-    {% empty %}
-        <p>No comment board posts available.</p>
-    {% endfor %}
+    <li><a href="{% url 'create_comment_post' %}">Create Comment Post</a></li>
 </div>
+
+<h3>General Posts</h3>
+<ul>
+    {% for post in general_posts %}
+        <li>
+            <strong>{{ post.get_post_type_display }}</strong>: {{ post.content }}
+            <p>Posted by: {{ post.author.username }}</p>
+
+            <!-- Display existing comments -->
+            <h4>Comments:</h4>
+            <ul>
+                {% for comment in post.comments.all %}
+                    <li>
+                        <strong>{{ comment.author.username }}</strong>: {{ comment.content }}
+                        <p><small>Posted on {{ comment.created_at }}</small></p>
+                    </li>
+                {% empty %}
+                    <li>No comments yet.</li>
+                {% endfor %}
+            </ul>
+
+            <!-- Comment form (visible only to logged-in users) -->
+            {% if user.is_authenticated %}
+                <form method="post">
+                    {% csrf_token %}
+                    {{ comment_form.as_p }}
+                    <input type="hidden" name="post_id" value="{{ post.id }}">
+                    <button type="submit" class="btn btn-primary">Comment</button>
+                </form>
+            {% else %}
+                <p><a href="{% url 'login' %}">Log in</a> to comment on this post.</p>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>
+
+
+<h2>Job Openings</h2>
+<ul>
+    {% for post in job_openings %}
+        <li>
+            <strong>{{ post.author.username }}</strong>: {{ post.content }}
+        </li>
+    {% empty %}
+        <li>No job openings available.</li>
+    {% endfor %}
+</ul>
+
+<h2>Public Classes</h2>
+<ul>
+    {% for post in public_classes %}
+        <li>
+            <strong>{{ post.author.username }}</strong>: {{ post.content }}
+        </li>
+    {% empty %}
+        <li>No public classes available.</li>
+    {% endfor %}
+</ul>
+
 
 <a href="{% url 'profile_list' %}">View All Users</a> |
 

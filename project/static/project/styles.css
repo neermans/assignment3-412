@@ -1,0 +1,257 @@
+/* General Reset */
+body, h1, h2, h3, h4, p, ul, li, a, button, input, textarea {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+    font-family: 'Georgia', serif;
+    line-height: 1.6;
+    color: #5d4037; /* Brown for text */
+    background-color: #fffaf0; /* Soft cream background */
+    padding-top: 60px; /* Prevent content from overlapping fixed navbar */
+}
+
+/* Layout */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #ffe4e1; /* Baby pink background */
+    border: 1px solid #d7ccc8; /* Light brown border */
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Headings */
+h1, h2, h3, h4 {
+    margin-bottom: 15px;
+    font-weight: 600;
+    color: #5d4037; /* Brown for headings */
+}
+
+/* Links */
+a {
+    text-decoration: none;
+    color: #8d6e63; /* Soft brown */
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: #6d4c41; /* Darker brown */
+}
+
+/* Universal Button Styling */
+button, .btn {
+    display: inline-block;
+    padding: 10px 20px; /* Ensure consistent size */
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff; /* Text color */
+    background-color: #8d6e63; /* Soft brown background */
+    border: 2px solid #6d4c41; /* Slightly darker brown for the border */
+    border-radius: 30px; /* Rounded bubble shape */
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    width: 200px; /* Set a fixed width for all buttons */
+}
+
+/* Hover Effect for Buttons */
+button:hover, .btn:hover {
+    background-color: #6d4c41; /* Darker brown on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow for hover effect */
+}
+
+/* Disable Outline on Click */
+button:focus, .btn:focus {
+    outline: none;
+}
+
+/* Button Alignment */
+button.center, .btn.center {
+    margin: 0 auto;
+    display: block;
+}
+
+/* Form Styling */
+form {
+    margin-top: 20px;
+}
+
+form input[type="text"], form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #d7ccc8; /* Light brown */
+    border-radius: 10px;
+    font-size: 14px;
+    background-color: #fffaf0; /* Soft cream */
+    color: #5d4037;
+}
+
+form textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+form button {
+    display: block;
+    width: 100%;
+}
+
+/* Lists */
+ul {
+    list-style: none;
+    margin: 20px 0;
+    padding: 0;
+}
+
+ul li {
+    margin-bottom: 15px;
+    padding: 15px;
+    background: #fff; /* White background */
+    border: 1px solid #d7ccc8; /* Light brown */
+    border-radius: 15px;
+}
+
+/* Comments Section */
+.comment-section {
+    margin-top: 30px;
+}
+
+.comment-section h4 {
+    margin-bottom: 10px;
+}
+
+.comment {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-left: 5px solid #8d6e63; /* Soft brown */
+    background: #ffe4e1; /* Baby pink */
+    border-radius: 10px;
+}
+
+/* Navigation Bar */
+.navbar {
+    background-color: #ffe4e1; /* Soft pink */
+    padding: 10px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 0 0 10px 10px; /* Rounded corners on the bottom */
+    position: fixed; /* Fix to the top of the page */
+    top: 0;
+    width: 100%; /* Full width */
+    z-index: 1000; /* Ensure it appears above other elements */
+}
+
+.navbar-menu {
+    display: flex; /* Display items in a row */
+    justify-content: center; /* Center items */
+    gap: 20px; /* Add space between items */
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-menu li {
+    margin: 0;
+}
+
+.navbar-menu a {
+    text-decoration: none;
+    color: #5d4037; /* Soft brown */
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.navbar-menu a:hover {
+    background-color: #fbe9e7; /* Lighter pink */
+    color: #6d4c41; /* Darker brown */
+}
+
+/* Cards for Posts */
+.card {
+    border: 1px solid #d7ccc8; /* Light brown */
+    border-radius: 15px;
+    background: #fff; /* White background */
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+}
+
+.card h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #5d4037;
+}
+
+.card p {
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #6d4c41;
+}
+
+.card .btn {
+    display: inline-block;
+    margin-top: 10px;
+}
+
+/* Hover Effects for Cards */
+.card:hover {
+    border-color: #8d6e63; /* Soft brown */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Profile Picture */
+.profile-picture img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #fffaf0; /* Soft cream */
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.profile-picture img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.profile-picture a {
+    display: inline-block;
+}
+
+/* Footer */
+footer {
+    margin-top: 50px;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 14px;
+    color: #8d6e63;
+    background-color: #fffaf0;
+    border-radius: 15px;
+    border: 1px solid #d7ccc8;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .navbar-menu {
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px 0;
+    }
+
+    button, .btn {
+        font-size: 14px;
+        padding: 8px 15px;
+    }
+
+    header {
+        font-size: 20px;
+        padding: 15px 0;
+    }
+}
