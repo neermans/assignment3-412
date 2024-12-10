@@ -1,0 +1,11 @@
+{% extends 'project/base.html' %}
+
+{% block content %}
+<h1>{{ profile.name }}'s Profile</h1>
+<img src="{{ profile.image }}" alt="{{ profile.name }}" width="150" height="150">
+<p><strong>Dance Company:</strong> {{ profile.dance_company }}</p>
+<p><strong>Email Contact:</strong> <a href="mailto:{{ profile.email_contact }}">{{ profile.email_contact }}</a></p>
+
+<a href="{% url 'blog_home' %}">Back to Blog Home</a>
+
+{% endblock %}

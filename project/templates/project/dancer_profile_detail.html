@@ -1,14 +1,22 @@
 {% extends 'project/base.html' %}
 
 {% block content %}
-  <h2>Profile: {{ profile.name }}</h2>
-  <p><strong>Bio:</strong> {{ profile.bio }}</p>
-  <p><strong>Job History:</strong> {{ profile.job_history }}</p>
-  <p><strong>Preferred Styles:</strong>
-    <ul>
-      {% for style in profile.preferred_styles.all %}
-        <li>{{ style.name }}</li>
-      {% endfor %}
-    </ul>
-  </p>
+<h1>{{ profile.name }}'s Profile</h1>
+<img src="{{ profile.image }}" alt="{{ profile.name }}" width="150" height="150">
+<p><strong>Bio:</strong> {{ profile.bio }}</p>
+<p><strong>Job History:</strong> {{ profile.job_history }}</p>
+
+<!-- Add Private Messaging Link -->
+{% if user.is_authenticated and user != profile.dancerUser %}
+    <a href="{% url 'send_message' profile.dancerUser.pk %}" class="btn btn-primary">Send a Private Message</a>
+{% else %}
+    {% if user == profile.dancerUser %}
+        <p>This is your profile. You cannot send messages to yourself.</p>
+    {% else %}
+        <p>You must <a href="{% url 'login' %}">log in</a> to send messages.</p>
+    {% endif %}
+{% endif %}
+
+<a href="{% url 'blog_home' %}">Back to Blog Home</a>
+
 {% endblock %}

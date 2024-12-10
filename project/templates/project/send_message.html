@@ -1,0 +1,29 @@
+{% extends 'project/base.html' %}
+
+{% block content %}
+<h1>Conversation with {{ receiver.username }}</h1>
+
+<!-- Chat History -->
+<div class="chat-history">
+    {% for message in messages %}
+        <div class="message {% if message.sender == user %}sent{% else %}received{% endif %}">
+            <p><strong>{{ message.sender.username }}:</strong> {{ message.content }}</p>
+        </div>
+    {% empty %}
+        <p>No messages yet. Start the conversation!</p>
+    {% endfor %}
+</div>
+
+<!-- Send a New Message -->
+<h2>Send a New Message</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Send</button>
+</form>
+
+<a href="{% url 'dancer_profile_detail' receiver.dancer_profile.pk %}">Back to {{ receiver.dancer_profile.name }}'s Profile</a>
+
+<a href="{% url 'blog_home' %}">Back to Blog Home</a>
+
+{% endblock %}

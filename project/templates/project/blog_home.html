@@ -1,0 +1,65 @@
+{% extends 'project/base.html' %}
+
+{% block content %}
+<h1>Welcome to the Dance Blog</h1>
+
+<!-- Navigation Bar -->
+<div>
+    {% if user.is_authenticated %}
+        <p>You are currently logged in as {{ user.username }}.</p>
+        <a href="{% url 'logout' %}">Log Out</a> |
+        <a href="{% url 'create_dancer_profile' %}">Register as Dancer</a> |
+        <a href="{% url 'create_recruiter_profile' %}">Register as Choreographer</a>
+    {% else %}
+        <a href="{% url 'login' %}">Log In</a> |
+        <a href="{% url 'create_dancer_profile' %}">Register as Dancer</a> |
+        <a href="{% url 'create_recruiter_profile' %}">Register as Choreographer</a>
+    {% endif %}
+</div>
+<hr>
+
+<!-- Videos and Music Section -->
+<h2>Videos and Music</h2>
+<div>
+    {% for post in dance_posts %}
+        <div>
+            <h3>{{ post.description }}</h3>
+            {% if post.video %}
+                <video controls src="{{ post.video.url }}" width="320" height="240"></video>
+            {% elif post.cut_music %}
+                <audio controls src="{{ post.cut_music.url }}"></audio>
+            {% endif %}
+            <p>Posted by: {{ post.poster.name }}</p>
+            <p>Posted on: {{ post.created_at }}</p>
+        </div>
+        <hr>
+    {% empty %}
+        <p>No video or music posts available.</p>
+    {% endfor %}
+</div>
+<!-- Comment Board Posts Section -->
+<h2>Comment Board Posts</h2>
+<div>
+    {% for post in comment_board_posts %}
+        <div>
+            <h3>
+                {% if post.post_type == "JO" %}
+                    [Job Opening]
+                {% elif post.post_type == "PC" %}
+                    [Public Class]
+                {% else %}
+                    [General Post]
+                {% endif %}
+            </h3>
+            <p>{{ post.content }}</p>
+            <p>Posted by: {{ post.author.username }}</p>
+        </div>
+        <hr>
+    {% empty %}
+        <p>No comment board posts available.</p>
+    {% endfor %}
+</div>
+
+<a href="{% url 'profile_list' %}">View All Users</a> |
+
+{% endblock %}

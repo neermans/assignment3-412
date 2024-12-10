@@ -1,0 +1,44 @@
+{% extends 'project/base.html' %}
+
+{% block content %}
+<h1>All Profiles</h1>
+
+<h2>Dancers</h2>
+<div>
+    {% for dancer in dancers %}
+        <div>
+            {% if dancer.image %}
+                <img src="{{ dancer.image }}" alt="{{ dancer.name }}" width="100" height="100">
+            {% else %}
+                <p>No image available</p>
+            {% endif %}
+            <td><a href="{% url 'dancer_profile_detail' dancer.pk %}">{{ dancer.name }}</a></td>
+            <p>{{ dancer.bio }}</p>
+        </div>
+        <hr>
+    {% empty %}
+        <p>No dancers found.</p>
+    {% endfor %}
+</div>
+
+<h2>Choreographers</h2>
+<div>
+    {% for recruiter in recruiters %}
+        <div>
+            {% if recruiter.image %}
+                <img src="{{ recruiter.image }}" alt="{{ recruiter.name }}" width="100" height="100">
+            {% else %}
+                <p>No image available</p>
+            {% endif %}
+            <td><a href="{% url 'recruiter_profile_detail' recruiter.pk %}">{{ recruiter.name }}</a></td>
+            <p>{{ recruiter.dance_company }}</p>
+        </div>
+        <hr>
+    {% empty %}
+        <p>No choreographers found.</p>
+    {% endfor %}
+</div>
+
+<a href="{% url 'blog_home' %}">Back to Blog Home</a>
+
+{% endblock %}

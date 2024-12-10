@@ -5,11 +5,13 @@ from django.contrib.auth.models import User
 
 
 class DancerProfile(models.Model):
+    dancerUser = models.OneToOneField(User, on_delete=models.CASCADE,related_name="dancer_profile")
     name = models.CharField(max_length=100)
-    userProfileDancer = models.OneToOneField(User, on_delete=models.CASCADE)
     preferred_styles = models.ManyToManyField('DanceStyle')
     bio = models.TextField()
     job_history = models.TextField()
+    image = models.URLField(max_length=200, blank = True, null=True)
+
 
     def __str__(self):
         return f"{self.name} 's Profile"
@@ -17,9 +19,11 @@ class DancerProfile(models.Model):
 
 class RecruiterProfile(models.Model):
     name = models.CharField(max_length=100)
-    userProfileRecruiter = models.OneToOneField(User, on_delete=models.CASCADE)
+    recruiterUser = models.OneToOneField(User, on_delete=models.CASCADE)
     dance_company = models.CharField(max_length=255)
     email_contact = models.EmailField()
+    image = models.URLField(max_length=200, blank=True, null=True)
+
 
     def __str__(self):
         return f"{self.name} - {self.dance_company}'s profile"
@@ -40,6 +44,7 @@ class DancePost(models.Model):
     cut_music = models.FileField(upload_to='music/', blank=True, null=True)
     description = models.TextField()
     poster = models.ForeignKey(DancerProfile, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         if self.video:
