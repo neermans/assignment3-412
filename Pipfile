@@ -11,6 +11,7 @@ pillow = "*"
 pandas = "*"
 plotly = "*"
 numpy = "*"
+matplotlib = "*"
 
 
 [dev-packages]
