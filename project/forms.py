@@ -3,7 +3,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import DancerProfile, DanceStyle, RecruiterProfile, PrivateMessage
+from .models import *
 
 class CreateDancerProfileForm(forms.ModelForm):
     class Meta:
@@ -24,3 +24,13 @@ class PrivateMessageForm(forms.ModelForm):
         widgets = {
             'content': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Write your message here...'}),
         }
+
+class DancePostForm(forms.ModelForm):
+    class Meta:
+        model = DancePost
+        fields = ['video', 'cut_music', 'description']
+
+class CommentBoardPostForm(forms.ModelForm):
+    class Meta:
+        model = CommentBoardPost
+        fields = ['content', 'post_type']

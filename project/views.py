@@ -104,7 +104,6 @@ class RecruiterProfileDetailView(LoginRequiredMixin, DetailView):
     template_name = 'project/recruiter_profile_detail.html'
     context_object_name = 'profile'
 
-
 class SendMessageView(LoginRequiredMixin, FormView):
     template_name = 'project/send_message.html'
     form_class = PrivateMessageForm
@@ -114,14 +113,17 @@ class SendMessageView(LoginRequiredMixin, FormView):
         receiver_id = self.kwargs['receiver_id']
         receiver = get_object_or_404(User, pk=receiver_id)
 
-        # Fetch messages between the logged-in user and the receiver
+        # Add receiver profiles to context
         context['receiver'] = receiver
-        context['messages'] = list(PrivateMessage.objects.filter(
-        Q(sender=self.request.user, receiver=receiver) |  # Messages sent by the current user to the receiver
-        Q(sender=receiver, receiver=self.request.user)   # Messages sent by the receiver to the current user
-    ))
-        return context
+        context['dancer_profile'] = getattr(receiver, 'dancer_profile', None)
+        context['recruiter_profile'] = getattr(receiver, 'recruiter_profile', None)
 
+        # Fetch messages between the logged-in user and the receiver
+        context['messages'] = PrivateMessage.objects.filter(
+            Q(sender=self.request.user, receiver=receiver) |
+            Q(sender=receiver, receiver=self.request.user)
+        )
+        return context
 
     def form_valid(self, form):
         receiver_id = self.kwargs['receiver_id']
@@ -129,7 +131,10 @@ class SendMessageView(LoginRequiredMixin, FormView):
 
         # Prevent sending a message to yourself
         if receiver == self.request.user:
-            return redirect('dancer_profile_detail', pk=receiver.dancer_profile.pk)
+            if hasattr(receiver, 'dancer_profile'):
+                return redirect('dancer_profile_detail', pk=receiver.dancer_profile.pk)
+            elif hasattr(receiver, 'recruiter_profile'):
+                return redirect('recruiter_profile_detail', pk=receiver.recruiter_profile.pk)
 
         # Save the new message
         form.instance.sender = self.request.user
@@ -138,3 +143,71 @@ class SendMessageView(LoginRequiredMixin, FormView):
 
         # Redirect back to the same messaging page
         return redirect('send_message', receiver_id=receiver.pk)
+    
+
+
+class EditRecruiterProfileView(LoginRequiredMixin, UpdateView):
+    model = RecruiterProfile
+    fields = ['name', 'dance_company', 'email_contact', 'image']
+    template_name = 'project/edit_recruiter_profile.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        # Ensure the logged-in user matches the profile owner
+        profile = self.get_object()
+        if profile.recruiterUser != request.user:
+            return redirect('recruiter_profile_detail', pk=profile.pk)  # Redirect to profile detail if not authorized
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return self.object.get_absolute_url()
+
+
+class EditDancerProfileView(LoginRequiredMixin, UpdateView):
+    model = DancerProfile
+    fields = ['name', 'preferred_styles', 'bio', 'job_history', 'image']
+    template_name = 'project/edit_dancer_profile.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        # Ensure the logged-in user matches the profile owner
+        profile = self.get_object()
+        if profile.dancerUser != request.user:
+            return redirect('dancer_profile_detail', pk=profile.pk)  # Redirect to profile detail if not authorized
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return self.object.get_absolute_url()
+    
+
+
+class CreateDancePostView(LoginRequiredMixin, CreateView):
+    model = DancePost
+    fields = ['video', 'cut_music', 'description']
+    template_name = 'blog/create_dance_post.html'
+
+    def form_valid(self, form):
+        # Ensure the logged-in user has a DancerProfile
+        try:
+            dancer_profile = self.request.user.dancer_profile
+        except DancerProfile.DoesNotExist:
+            return redirect('error_page')  # Replace with a proper error page or message
+        # Assign the logged-in user's DancerProfile as the poster
+        form.instance.poster = dancer_profile
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return redirect('blog_home')  # Replace with the desired success redirect URL
+    
+
+
+class CreateCommentBoardPostView(LoginRequiredMixin, CreateView):
+    model = CommentBoardPost
+    fields = ['content', 'post_type']
+    template_name = 'blog/create_comment_post.html'
+
+    def form_valid(self, form):
+        # Assign the logged-in user as the author
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return redirect('blog_home')  # Replace with the desired success redirect URL

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 # Create your models here.
 
@@ -15,11 +16,14 @@ class DancerProfile(models.Model):
 
     def __str__(self):
         return f"{self.name} 's Profile"
+    
+    def get_absolute_url(self):
+        return reverse('dancer_profile_detail', args=[self.pk])
 
 
 class RecruiterProfile(models.Model):
     name = models.CharField(max_length=100)
-    recruiterUser = models.OneToOneField(User, on_delete=models.CASCADE)
+    recruiterUser = models.OneToOneField(User, on_delete=models.CASCADE, related_name="recruiter_profile")
     dance_company = models.CharField(max_length=255)
     email_contact = models.EmailField()
     image = models.URLField(max_length=200, blank=True, null=True)
@@ -27,6 +31,9 @@ class RecruiterProfile(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.dance_company}'s profile"
+    
+    def get_absolute_url(self):
+        return reverse('recruiter_profile_detail', args=[self.pk])
     
 
 

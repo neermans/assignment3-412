@@ -13,6 +13,12 @@ urlpatterns = [
     path('profiles/', ProfileListView.as_view(template_name='project/profile_list.html'), name='profile_list'),
     path('logout/', auth_views.LogoutView.as_view(template_name='project/logged_out.html'), name='logout'), 
     path('message/send/<int:receiver_id>/', SendMessageView.as_view(), name='send_message'),
+    path('dancer_profile/edit/<int:pk>/', views.EditDancerProfileView.as_view(), name='edit_dancer_profile'),
+    path('recruiter_profile/edit/<int:pk>/', views.EditRecruiterProfileView.as_view(), name='edit_recruiter_profile'),
+    path('dance_post/create/', CreateDancePostView.as_view(), name='create_dance_post'),
+    path('comment_post/create/', CreateCommentBoardPostView.as_view(), name='create_comment_post'),
+
+
 
 
 

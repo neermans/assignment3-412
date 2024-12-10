@@ -17,6 +17,15 @@
     {% endif %}
 {% endif %}
 
+
+<!-- update profile if you are the one logged in -->
+
+{% if request.user == profile.dancerUser %}
+    <a href="{% url 'edit_dancer_profile' profile.pk %}" class="btn btn-primary">Edit Profile</a>
+{% elif request.user == profile.recruiterUser %}
+    <a href="{% url 'edit_recruiter_profile' profile.pk %}" class="btn btn-primary">Edit Profile</a>
+{% endif %}
+
 <a href="{% url 'blog_home' %}">Back to Blog Home</a>
 
 {% endblock %}

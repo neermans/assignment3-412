@@ -6,6 +6,26 @@
 <p><strong>Dance Company:</strong> {{ profile.dance_company }}</p>
 <p><strong>Email Contact:</strong> <a href="mailto:{{ profile.email_contact }}">{{ profile.email_contact }}</a></p>
 
+
+<!-- Add Private Messaging Link -->
+{% if user.is_authenticated and user != profile.recruiterUser %}
+    <a href="{% url 'send_message' profile.recruiterUser.pk %}" class="btn btn-primary">Send a Private Message</a>
+{% else %}
+    {% if user == profile.recruiterUser %}
+        <p>This is your profile. You cannot send messages to yourself.</p>
+    {% else %}
+        <p>You must <a href="{% url 'login' %}">log in</a> to send messages.</p>
+    {% endif %}
+{% endif %}
+
+<!-- update profile if you are the one logged in -->
+
+{% if request.user == profile.dancerUser %}
+    <a href="{% url 'edit_dancer_profile' profile.pk %}" class="btn btn-primary">Edit Profile</a>
+{% elif request.user == profile.recruiterUser %}
+    <a href="{% url 'edit_recruiter_profile' profile.pk %}" class="btn btn-primary">Edit Profile</a>
+{% endif %}
+
 <a href="{% url 'blog_home' %}">Back to Blog Home</a>
 
 {% endblock %}

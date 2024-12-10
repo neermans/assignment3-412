@@ -22,7 +22,17 @@
     <button type="submit" class="btn btn-primary">Send</button>
 </form>
 
-<a href="{% url 'dancer_profile_detail' receiver.dancer_profile.pk %}">Back to {{ receiver.dancer_profile.name }}'s Profile</a>
+{% if receiver.recruiter_profile %}
+    <a href="{% url 'recruiter_profile_detail' receiver.recruiter_profile.pk %}">
+        Back to Recruiter's Profile
+    </a>
+{% elif receiver.dancer_profile %}
+    <a href="{% url 'dancer_profile_detail' receiver.dancer_profile.pk %}">
+        Back to {{ receiver.dancer_profile.name }}'s Profile
+    </a>
+{% else %}
+    <p>No profile available.</p>
+{% endif %}
 
 <a href="{% url 'blog_home' %}">Back to Blog Home</a>
 
