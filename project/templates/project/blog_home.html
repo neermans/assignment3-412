@@ -1,3 +1,6 @@
+<!-- templates/project/blog_home.html -->
+<!-- a template that will be used as the landing page for the project-->
+
 {% extends 'project/base.html' %}
 
 {% block content %}
@@ -13,6 +16,7 @@
 {% endif %}
 
 <div>
+    <!-- make sure only logged in users can see this stuff -->
     {% if user.is_authenticated %}
         <p>You are currently logged in as {{ user.username }}.</p>
         <a href="{% url 'logout' %}">Log Out</a> |
@@ -45,6 +49,7 @@
             {% elif post.cut_music %}
                 <audio controls src="{{ post.cut_music.url }}"></audio>
             {% endif %}
+            <!-- only if they are logged in can they have the link to go to the list of profiles-->
             {% if user.is_authenticated %}
             <br>
                 <a href="{% url 'profile_list' %}">Go to list of all profiles to find this person!</a>
@@ -65,6 +70,7 @@
     <li><a href="{% url 'create_comment_post' %}">Create Comment Post</a></li>
 </div>
 
+<!-- three different types of posts, general posts where people can leave comments, job openings, and public classes -->
 <h3>General Posts</h3>
 <ul>
     {% for post in general_posts %}

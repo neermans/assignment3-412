@@ -9,3 +9,6 @@ admin.site.register(DancePost)
 admin.site.register(CommentBoardPost)
 admin.site.register(RecruiterProfile)
 admin.site.register(PrivateMessage)
+admin.site.register(Comment)
+admin.site.register(Friendship)
+

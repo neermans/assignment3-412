@@ -17,6 +17,7 @@ from django.shortcuts import render
 
 # Create your views here.
 
+# This is the view for the main page of the web app
 class BlogHomeView(TemplateView):
     template_name = 'project/blog_home.html'
 
@@ -42,6 +43,7 @@ class BlogHomeView(TemplateView):
         # Add the comment form
         context['comment_form'] = CommentForm()
 
+        # make sure the user is logged in before the profile picture is uploaded and the profile detail page is loaded
         if self.request.user.is_authenticated:
             if hasattr(self.request.user, 'dancer_profile'):
                 context['profile_image'] = self.request.user.dancer_profile.image
@@ -50,34 +52,39 @@ class BlogHomeView(TemplateView):
                 context['profile_image'] = self.request.user.recruiter_profile.image
                 context['profile_url'] = reverse('recruiter_profile_detail', kwargs={'pk': self.request.user.recruiter_profile.pk})
 
-
         return context
 
+
     def post(self, request, *args, **kwargs):
+        # Handling form submission for comments
         form = CommentForm(request.POST)
         if form.is_valid():
+            # get all info
             post_id = request.POST.get('post_id')  # Hidden input for post ID
             post = CommentBoardPost.objects.get(id=post_id)
             comment = form.save(commit=False)
             comment.post = post
             comment.author = request.user
             comment.save()
-            return redirect('blog_home')  # Replace 'blog_home' with the actual name of your blog home URL
+            return redirect('blog_home') 
 
-        # Re-render the page with the form errors
+        # Re-render the page with the form errors if there are any
         context = self.get_context_data(**kwargs)
         context['comment_form'] = form
         return self.render_to_response(context)
     
 
+# view for creating the dancer profile 
 class CreateDancerProfileView(CreateView):
     model = DancerProfile
     form_class = CreateDancerProfileForm
     template_name = 'project/create_dancer_profile_form.html'
 
+    # once made, redirect them to this persons profile page
     def get_success_url(self) -> str:
         return reverse('dancer_profile_detail', kwargs={'pk': self.object.pk})
 
+    # get all the context data
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if 'user_form' not in context:
@@ -86,6 +93,7 @@ class CreateDancerProfileView(CreateView):
             context['profile_form'] = self.get_form()
         return context
 
+    # make sure the form is correct before moving on
     def form_valid(self, form):
         user_form = UserCreationForm(self.request.POST)
         if user_form.is_valid():
@@ -97,6 +105,7 @@ class CreateDancerProfileView(CreateView):
             return self.render_to_response(self.get_context_data(form=form, user_form=user_form))
         
 
+# the view for the entire list of profiles, both dancer and recruiter 
 class ProfileListView(TemplateView):
     template_name = 'project/profile_list.html'
 
@@ -107,6 +116,7 @@ class ProfileListView(TemplateView):
         return context
     
 
+# the view for the profile page of a dancer, must be logged in to see it
 class DancerProfileDetailView(LoginRequiredMixin, DetailView):
     model = DancerProfile
     template_name = 'project/dancer_profile_detail.html'
@@ -136,14 +146,14 @@ class DancerProfileDetailView(LoginRequiredMixin, DetailView):
 
         return context
    
-
+# view for making a recruiter profile
 class CreateRecruiterProfileView(CreateView):
     model = RecruiterProfile
     form_class = CreateRecruiterProfileForm
     template_name = 'project/create_recruiter_profile_form.html'
 
+    # get sent to the recruiters page after it is made properly
     def get_success_url(self):
-        # Adjust the URL name based on your actual URL configuration
         return reverse('recruiter_profile_detail', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
@@ -164,6 +174,7 @@ class CreateRecruiterProfileView(CreateView):
             return self.render_to_response(self.get_context_data(form=form, user_form=user_form))
         
 
+# view for the profile page of a recruiter
 class RecruiterProfileDetailView(LoginRequiredMixin, DetailView):
     model = RecruiterProfile
     template_name = 'project/recruiter_profile_detail.html'
@@ -191,14 +202,14 @@ class RecruiterProfileDetailView(LoginRequiredMixin, DetailView):
         context['can_add_friend'] = user != profile.recruiterUser and not context['is_friend']
         context['friends'] = Friendship.objects.filter(user=profile.recruiterUser).select_related('friend')
 
-
         return context
 
-
+# view for sending a private message between two profiles and so that no one else can see it other than those two people
 class SendMessageView(LoginRequiredMixin, FormView):
     template_name = 'project/send_message.html'
     form_class = PrivateMessageForm
 
+    # get all of the information regarding the content in the message and the two profiles connected to the messages
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         receiver_id = self.kwargs['receiver_id']
@@ -231,10 +242,11 @@ class SendMessageView(LoginRequiredMixin, FormView):
 
         return super().form_valid(form)
 
+    # where to get sent after the message is sent successfully
     def get_success_url(self):
         return self.request.path 
 
-
+# the view for editing a recruiters profile page
 class EditRecruiterProfileView(LoginRequiredMixin, UpdateView):
     model = RecruiterProfile
     fields = ['name', 'dance_company', 'email_contact', 'image']
@@ -247,10 +259,12 @@ class EditRecruiterProfileView(LoginRequiredMixin, UpdateView):
             return redirect('recruiter_profile_detail', pk=profile.pk)  # Redirect to profile detail if not authorized
         return super().dispatch(request, *args, **kwargs)
 
+    # get sent here after you finish editing properly
     def get_success_url(self):
         return self.object.get_absolute_url()
 
 
+# view for editing a dancers profile page
 class EditDancerProfileView(LoginRequiredMixin, UpdateView):
     model = DancerProfile
     fields = ['name', 'preferred_styles', 'bio', 'job_history', 'image']
@@ -263,11 +277,12 @@ class EditDancerProfileView(LoginRequiredMixin, UpdateView):
             return redirect('dancer_profile_detail', pk=profile.pk)  # Redirect to profile detail if not authorized
         return super().dispatch(request, *args, **kwargs)
 
+    # get sent here after the profile page is edited properly
     def get_success_url(self):
         return self.object.get_absolute_url()
     
 
-
+# the view for creating a dance post
 class CreateDancePostView(LoginRequiredMixin, CreateView):
     model = DancePost
     fields = ['video', 'cut_music', 'description']
@@ -278,6 +293,7 @@ class CreateDancePostView(LoginRequiredMixin, CreateView):
         form.instance.poster = self.request.user
         return super().form_valid(form)
 
+    # make sure to accredit the correct person for the content
     def get_success_url(self):
         # Redirect to the appropriate profile
         if hasattr(self.request.user, 'dancer_profile'):
@@ -286,6 +302,7 @@ class CreateDancePostView(LoginRequiredMixin, CreateView):
             return reverse('recruiter_profile_detail', kwargs={'pk': self.request.user.recruiter_profile.pk})
         return reverse('blog_home')
 
+# the view for creating a comment board post
 class CreateCommentBoardPostView(LoginRequiredMixin, CreateView):
     model = CommentBoardPost
     fields = ['content', 'post_type']
@@ -295,11 +312,11 @@ class CreateCommentBoardPostView(LoginRequiredMixin, CreateView):
         # Assign the logged-in user as the author
         form.instance.author = self.request.user
         return super().form_valid(form)
-
+    # make sure to get sent back to the blog home page after you submit the comment post properly
     def get_success_url(self):
-        return reverse('blog_home')  # Replace with the desired success redirect URL
+        return reverse('blog_home') 
     
-
+# view for editing a dance post done by the logged in user
 class EditDancePostView(LoginRequiredMixin, UpdateView):
     model = DancePost
     fields = ['video', 'cut_music', 'description']
@@ -334,6 +351,7 @@ class EditDancePostView(LoginRequiredMixin, UpdateView):
         return reverse('blog_home')  # Default fallback
     
 
+# view for editing a logged in users comment board post
 class EditCommentBoardPostView(LoginRequiredMixin, UpdateView):
     model = CommentBoardPost
     fields = ['content', 'post_type']
@@ -368,8 +386,7 @@ class EditCommentBoardPostView(LoginRequiredMixin, UpdateView):
         return reverse('blog_home')  # Default fallback
     
 
-
-
+# view for generating graphs based on web app data
 def generate_graphs():
     # Data Preparation
     total_posts = DancePost.objects.count() + CommentBoardPost.objects.count()
@@ -409,6 +426,7 @@ def generate_graphs():
 
     return image1_base64, image2_base64
 
+# the actual page for the graphs
 def graphs_page(request):
     image1_base64, image2_base64 = generate_graphs()
 
@@ -418,6 +436,7 @@ def graphs_page(request):
     })
 
 
+# the view for adding another profile as a friend
 class AddFriendView(LoginRequiredMixin, View):
     def post(self, request, user_id):
         friend = get_object_or_404(User, id=user_id)
@@ -439,31 +458,3 @@ class AddFriendView(LoginRequiredMixin, View):
         return redirect('user_profile')  # Fallback if no profile is found
     
 
-class DeleteDancePostView(LoginRequiredMixin, DeleteView):
-    model = DancePost
-    def get_success_url(self):
-        # Redirect to the appropriate profile page after editing
-        if hasattr(self.request.user, 'recruiter_profile'):
-            return reverse('recruiter_profile_detail', kwargs={'pk': self.request.user.recruiter_profile.pk})
-        elif hasattr(self.request.user, 'dancer_profile'):
-            return reverse('dancer_profile_detail', kwargs={'pk': self.request.user.dancer_profile.pk})
-        return reverse('blog_home')  # Default fallback
-    
-
-    def get_queryset(self):
-        # Ensure the logged-in user can only delete their own posts
-        return super().get_queryset().filter(poster=self.request.user.dancer_profile)
-
-
-class DeleteCommentPostView(LoginRequiredMixin, DeleteView):
-    model = CommentBoardPost
-    def get_success_url(self):
-        # Redirect to the appropriate profile page after editing
-        if hasattr(self.request.user, 'recruiter_profile'):
-            return reverse('recruiter_profile_detail', kwargs={'pk': self.request.user.recruiter_profile.pk})
-        elif hasattr(self.request.user, 'dancer_profile'):
-            return reverse('dancer_profile_detail', kwargs={'pk': self.request.user.dancer_profile.pk})
-        return reverse('blog_home')  # Default fallback
-    def get_queryset(self):
-        # Ensure the logged-in user can only delete their own posts
-        return super().get_queryset().filter(author=self.request.user)

@@ -8,7 +8,7 @@ from django.contrib.contenttypes.models import ContentType
 
 # Create your models here.
 
-
+# Model for the dancers
 class DancerProfile(models.Model):
     dancerUser = models.OneToOneField(User, on_delete=models.CASCADE,related_name="dancer_profile")
     name = models.CharField(max_length=100)
@@ -25,6 +25,7 @@ class DancerProfile(models.Model):
         return reverse('dancer_profile_detail', args=[self.pk])
 
 
+# Model for the recruiters 
 class RecruiterProfile(models.Model):
     name = models.CharField(max_length=100)
     recruiterUser = models.OneToOneField(User, on_delete=models.CASCADE, related_name="recruiter_profile")
@@ -40,7 +41,7 @@ class RecruiterProfile(models.Model):
         return reverse('recruiter_profile_detail', args=[self.pk])
     
 
-
+# Model for the different types of dance styles
 class DanceStyle(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
@@ -48,8 +49,7 @@ class DanceStyle(models.Model):
     def __str__(self):
         return self.name
     
-
-
+# Model for dance posts which can be either videos or pieces of cut music
 class DancePost(models.Model):
     poster = models.ForeignKey(User, on_delete=models.CASCADE, related_name='dance_posts')  # Reference to User
     video = models.FileField(upload_to='videos/', blank=True, null=True)
@@ -60,7 +60,7 @@ class DancePost(models.Model):
     def __str__(self):
         return f"Post by {self.poster.username}"
 
-
+# Model for private messaging between two different profiles
 class PrivateMessage(models.Model):
     sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
     receiver = models.ForeignKey(User, related_name='received_messages', on_delete=models.CASCADE)
@@ -69,7 +69,7 @@ class PrivateMessage(models.Model):
     def __str__(self):
         return f"Message from {self.sender} to {self.receiver} "
 
-
+# Model for comment board posts, which can be either general, job opening, or public class
 class CommentBoardPost(models.Model):
     class PostType(models.TextChoices):
         JOB_OPENING = 'JO', 'Job Opening'
@@ -87,6 +87,7 @@ class CommentBoardPost(models.Model):
     def __str__(self):
         return f"{self.get_post_type_display()} by {self.author} "
 
+# Model for comments that can be left on general comment board posts
 class Comment(models.Model):
     post = models.ForeignKey('CommentBoardPost', on_delete=models.CASCADE, related_name='comments')
     author = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -96,6 +97,7 @@ class Comment(models.Model):
     def __str__(self):
         return f"Comment by {self.author.username} on {self.post}"
     
+# Model for friendships between different profiles
 class Friendship(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friendships')
     friend = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friends')
