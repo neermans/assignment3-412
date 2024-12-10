@@ -3,6 +3,22 @@
 {% block content %}
 <h1>All Profiles</h1>
 
+<label for="profile-dropdown">Select a Profile:</label>
+<select id="profile-dropdown" onchange="location = this.value;">
+    <option value="">-- Choose a Profile --</option>
+    <optgroup label="Dancers">
+        {% for dancer in dancers %}
+            <option value="{% url 'dancer_profile_detail' dancer.pk %}">{{ dancer.name }}</option>
+        {% endfor %}
+    </optgroup>
+    <optgroup label="Recruiters">
+        {% for recruiter in recruiters %}
+            <option value="{% url 'recruiter_profile_detail' recruiter.pk %}">{{ recruiter.name }}</option>
+        {% endfor %}
+    </optgroup>
+</select>
+
+
 <h2>Dancers</h2>
 <div>
     {% for dancer in dancers %}

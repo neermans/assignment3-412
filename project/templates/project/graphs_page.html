@@ -1,0 +1,20 @@
+{% extends 'project/base.html' %}
+
+{% block content %}
+<h1>Blog Statistics</h1>
+
+<!-- Total Posts Pie Chart -->
+<div>
+    <h2>Ratio of Post Types</h2>
+    <img src="data:image/png;base64,{{ image1_base64 }}" alt="Pie Chart of Post Types">
+</div>
+
+<!-- Posts Distribution Bar Chart -->
+<div>
+    <h2>Posts by Choreographers vs Dancers</h2>
+    <img src="data:image/png;base64,{{ image2_base64 }}" alt="Bar Chart of Posts by Profile Type">
+</div>
+
+<h1><a href="{% url 'blog_home' %}">Back to home page!</a></h1>
+
+{% endblock %}

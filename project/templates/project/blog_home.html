@@ -18,10 +18,14 @@
         <a href="{% url 'logout' %}">Log Out</a> |
         <a href="{% url 'create_dancer_profile' %}">Register as Dancer</a> |
         <a href="{% url 'create_recruiter_profile' %}">Register as Choreographer</a>
+        <a href="{% url 'graphs_page' %}" class="btn btn-primary">View Blog Statistics</a>
+
     {% else %}
         <a href="{% url 'login' %}">Log In</a> |
         <a href="{% url 'create_dancer_profile' %}">Register as Dancer</a> |
         <a href="{% url 'create_recruiter_profile' %}">Register as Choreographer</a>
+        <a href="{% url 'graphs_page' %}" class="btn btn-primary">View Blog Statistics</a>
+
     {% endif %}
 </div>
 <hr>
@@ -41,7 +45,12 @@
             {% elif post.cut_music %}
                 <audio controls src="{{ post.cut_music.url }}"></audio>
             {% endif %}
-            <p>Posted by: {{ post.poster.name }}</p>
+            {% if user.is_authenticated %}
+            <br>
+                <a href="{% url 'profile_list' %}">Go to list of all profiles to find this person!</a>
+            <br>
+            {% endif %}
+            <p>Posted by: {{ post.poster.username }}</p>
             <p>Posted on: {{ post.created_at }}</p>
         </div>
         <hr>
@@ -61,6 +70,11 @@
     {% for post in general_posts %}
         <li>
             <strong>{{ post.get_post_type_display }}</strong>: {{ post.content }}
+            {% if user.is_authenticated %}
+            <br>
+                <a href="{% url 'profile_list' %}">Go to list of all profiles to find this person!</a>
+            <br>
+            {% endif %}
             <p>Posted by: {{ post.author.username }}</p>
 
             <!-- Display existing comments -->
@@ -95,6 +109,11 @@
 <h2>Job Openings</h2>
 <ul>
     {% for post in job_openings %}
+        {% if user.is_authenticated %}
+        <br>
+            <a href="{% url 'profile_list' %}">Go to list of all profiles to find this person!</a>
+        <br>
+        {% endif %}
         <li>
             <strong>{{ post.author.username }}</strong>: {{ post.content }}
         </li>
@@ -106,6 +125,11 @@
 <h2>Public Classes</h2>
 <ul>
     {% for post in public_classes %}
+        {% if user.is_authenticated %}
+        <br>
+            <a href="{% url 'profile_list' %}">Go to list of all profiles to find this person!</a>
+        <br>
+        {% endif %}
         <li>
             <strong>{{ post.author.username }}</strong>: {{ post.content }}
         </li>
@@ -114,7 +138,9 @@
     {% endfor %}
 </ul>
 
+{% if user.is_authenticated %}
+    <a href="{% url 'profile_list' %}">View All Users</a> 
+{% endif %}
 
-<a href="{% url 'profile_list' %}">View All Users</a> |
 
 {% endblock %}

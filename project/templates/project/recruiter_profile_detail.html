@@ -1,14 +1,15 @@
 {% extends 'project/base.html' %}
 
 {% block content %}
+<!-- Profile Header -->
 <h1>{{ profile.name }}'s Profile</h1>
 <img src="{{ profile.image }}" alt="{{ profile.name }}" width="150" height="150">
 <p><strong>Dance Company:</strong> {{ profile.dance_company }}</p>
 <p><strong>Email Contact:</strong> <a href="mailto:{{ profile.email_contact }}">{{ profile.email_contact }}</a></p>
 
-
-<!-- Add Private Messaging Link -->
+<!-- Private Messaging Section -->
 {% if user.is_authenticated and user != profile.recruiterUser %}
+    <!-- Button to send a private message -->
     <a href="{% url 'send_message' profile.recruiterUser.pk %}" class="btn btn-primary">Send a Private Message</a>
 {% else %}
     {% if user == profile.recruiterUser %}
@@ -18,18 +19,20 @@
     {% endif %}
 {% endif %}
 
+<!-- Dance Posts Section -->
 <h2>Dance Posts</h2>
 <ul>
     {% for post in dance_posts %}
         <li>
             <strong>{{ post.description }}</strong>
             {% if post.video %}
-                <a href="{{ post.video.url }}">View Video</a>
+                <a href="{{ post.video.url }}" class="btn btn-secondary">View Video</a>
             {% endif %}
             {% if post.cut_music %}
-                <a href="{{ post.cut_music.url }}">View Music</a>
+                <a href="{{ post.cut_music.url }}" class="btn btn-secondary">View Music</a>
             {% endif %}
             {% if is_own_profile %}
+                <!-- Edit button for dance posts -->
                 <a href="{% url 'edit_dance_post' post.pk %}" class="btn btn-primary">Edit</a>
             {% endif %}
         </li>
@@ -38,12 +41,14 @@
     {% endfor %}
 </ul>
 
+<!-- Comment Board Posts Section -->
 <h2>Comment Board Posts</h2>
 <ul>
     {% for post in comment_board_posts %}
         <li>
             <strong>{{ post.get_post_type_display }}</strong>: {{ post.content }}
             {% if is_own_profile %}
+                <!-- Edit button for comment board posts -->
                 <a href="{% url 'edit_comment_post' post.pk %}" class="btn btn-primary">Edit</a>
             {% endif %}
         </li>
@@ -52,16 +57,38 @@
     {% endfor %}
 </ul>
 
-<!-- update profile if you are the one logged in -->
+<!-- Friend Management Section -->
+{% if can_add_friend and not is_friend %}
+    <!-- Add Friend Form -->
+    <form method="post" action="{% url 'add_friend' profile.recruiterUser.id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Add Friend</button>
+    </form>
+{% elif is_friend %}
+    <p>You are friends with this user.</p>
+{% endif %}
 
-{% if request.user == profile.dancerUser %}
-    <a href="{% url 'edit_dancer_profile' profile.pk %}" class="btn btn-primary">Edit Profile</a>
-{% elif request.user == profile.recruiterUser %}
+<!-- Friends List Section -->
+{% if request.user == profile.dancerUser or request.user == profile.recruiterUser %}
+    <h2>Your Friends</h2>
+    <ul>
+        {% for friendship in friends %}
+            <br>
+            {{ friendship.friend.username }}
+            <br>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+
+<!-- Profile Editing Section -->
+{% if request.user == profile.recruiterUser %}
+    <!-- Edit button for recruiter profile -->
     <a href="{% url 'edit_recruiter_profile' profile.pk %}" class="btn btn-primary">Edit Profile</a>
 {% endif %}
 
+<!-- Navigation Buttons -->
 <a href="{% url 'profile_list' %}" class="btn btn-secondary">Back to All Profiles</a>
-
-<a href="{% url 'blog_home' %}">Back to Blog Home</a>
+<a href="{% url 'blog_home' %}" class="btn btn-secondary">Back to Blog Home</a>
 
 {% endblock %}

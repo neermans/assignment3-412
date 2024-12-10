@@ -18,15 +18,7 @@ urlpatterns = [
     path('comment_post/create/', CreateCommentBoardPostView.as_view(), name='create_comment_post'),
     path('dance_post/edit/<int:pk>/', EditDancePostView.as_view(), name='edit_dance_post'),
     path('comment_post/edit/<int:pk>/', EditCommentBoardPostView.as_view(), name='edit_comment_post'),
+    path('graphs/', graphs_page, name='graphs_page'),
+    path('add_friend/<int:user_id>/', AddFriendView.as_view(), name='add_friend'),
 
 ]
-
-#path('', BlogHomeView.as_view(), name='blog_home'),
-#    path('login/', LoginView.as_view(), name='login'),
-#    path('register/dancer/', CreateDancerProfileView.as_view(), name='register_dancer'),
-#    path('register/recruiter/', CreateRecruiterProfileView.as_view(), name='register_recruiter'),
-#    path('profiles/', ProfileListView.as_view(), name='profile_list'),
-#    path('dashboard/', DashboardView.as_view(), name='dashboard'),
-#    path('post/new/', CreatePostView.as_view(), name='create_post'),
-#    path('messages/', MessageListView.as_view(), name='messages'),
-#    path('messages/new/', CreateMessageView.as_view(), name='create_message'),

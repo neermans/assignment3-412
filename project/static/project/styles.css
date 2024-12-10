@@ -1,257 +1,235 @@
-/* General Reset */
-body, h1, h2, h3, h4, p, ul, li, a, button, input, textarea {
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #fce4ec; /* Baby pink background */
+    color: #5d4037; /* Dark brown text */
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-}
-
-/* Body Styling */
-body {
-    font-family: 'Georgia', serif;
     line-height: 1.6;
-    color: #5d4037; /* Brown for text */
-    background-color: #fffaf0; /* Soft cream background */
-    padding-top: 60px; /* Prevent content from overlapping fixed navbar */
+    text-align: center; /* Center-align content */
 }
 
-/* Layout */
 .container {
     max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    background: #ffe4e1; /* Baby pink background */
-    border: 1px solid #d7ccc8; /* Light brown border */
-    border-radius: 15px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 0 auto; /* Center the content horizontally */
+    padding: 1rem;
 }
 
-/* Headings */
-h1, h2, h3, h4 {
-    margin-bottom: 15px;
-    font-weight: 600;
-    color: #5d4037; /* Brown for headings */
+h1, h2, h3, h4, h5, h6 {
+    color: #4e342e; /* Rich brown for headers */
 }
 
-/* Links */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    margin: 0.5rem 0;
+}
+
 a {
     text-decoration: none;
-    color: #8d6e63; /* Soft brown */
-    transition: color 0.3s;
+    color: #b71c1c; /* Subtle red for links */
+    font-weight: bold;
 }
 
 a:hover {
-    color: #6d4c41; /* Darker brown */
-}
-
-/* Universal Button Styling */
-button, .btn {
-    display: inline-block;
-    padding: 10px 20px; /* Ensure consistent size */
-    font-size: 16px;
-    font-weight: bold;
-    color: #fff; /* Text color */
-    background-color: #8d6e63; /* Soft brown background */
-    border: 2px solid #6d4c41; /* Slightly darker brown for the border */
-    border-radius: 30px; /* Rounded bubble shape */
-    cursor: pointer;
-    text-align: center;
-    transition: background-color 0.3s, box-shadow 0.3s;
-    width: 200px; /* Set a fixed width for all buttons */
-}
-
-/* Hover Effect for Buttons */
-button:hover, .btn:hover {
-    background-color: #6d4c41; /* Darker brown on hover */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow for hover effect */
-}
-
-/* Disable Outline on Click */
-button:focus, .btn:focus {
-    outline: none;
-}
-
-/* Button Alignment */
-button.center, .btn.center {
-    margin: 0 auto;
-    display: block;
-}
-
-/* Form Styling */
-form {
-    margin-top: 20px;
-}
-
-form input[type="text"], form textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #d7ccc8; /* Light brown */
-    border-radius: 10px;
-    font-size: 14px;
-    background-color: #fffaf0; /* Soft cream */
-    color: #5d4037;
-}
-
-form textarea {
-    resize: vertical;
-    min-height: 80px;
-}
-
-form button {
-    display: block;
-    width: 100%;
-}
-
-/* Lists */
-ul {
-    list-style: none;
-    margin: 20px 0;
-    padding: 0;
-}
-
-ul li {
-    margin-bottom: 15px;
-    padding: 15px;
-    background: #fff; /* White background */
-    border: 1px solid #d7ccc8; /* Light brown */
-    border-radius: 15px;
-}
-
-/* Comments Section */
-.comment-section {
-    margin-top: 30px;
-}
-
-.comment-section h4 {
-    margin-bottom: 10px;
-}
-
-.comment {
-    margin-bottom: 10px;
-    padding: 10px;
-    border-left: 5px solid #8d6e63; /* Soft brown */
-    background: #ffe4e1; /* Baby pink */
-    border-radius: 10px;
+    color: #880e4f; /* Dark pink hover effect */
 }
 
 /* Navigation Bar */
-.navbar {
-    background-color: #ffe4e1; /* Soft pink */
-    padding: 10px 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 0 0 10px 10px; /* Rounded corners on the bottom */
-    position: fixed; /* Fix to the top of the page */
-    top: 0;
-    width: 100%; /* Full width */
-    z-index: 1000; /* Ensure it appears above other elements */
-}
-
-.navbar-menu {
-    display: flex; /* Display items in a row */
-    justify-content: center; /* Center items */
-    gap: 20px; /* Add space between items */
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.navbar-menu li {
-    margin: 0;
-}
-
-.navbar-menu a {
-    text-decoration: none;
-    color: #5d4037; /* Soft brown */
-    font-weight: bold;
-    padding: 10px 15px;
-    border-radius: 5px;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.navbar-menu a:hover {
-    background-color: #fbe9e7; /* Lighter pink */
-    color: #6d4c41; /* Darker brown */
-}
-
-/* Cards for Posts */
-.card {
-    border: 1px solid #d7ccc8; /* Light brown */
+nav {
+    background-color: #d7ccc8; /* Light brown */
+    padding: 1rem;
     border-radius: 15px;
-    background: #fff; /* White background */
-    margin-bottom: 15px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 15px;
+    margin: 1rem auto;
+    max-width: 1200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.card h3 {
-    font-size: 18px;
-    margin-bottom: 10px;
-    color: #5d4037;
+nav ul {
+    display: flex;
+    gap: 1rem;
 }
 
-.card p {
-    margin-bottom: 10px;
-    font-size: 14px;
-    line-height: 1.5;
-    color: #6d4c41;
+nav ul li {
+    padding: 0.5rem 1rem;
+    background-color: #f8bbd0; /* Soft pink */
+    border-radius: 10px;
+    transition: all 0.3s ease;
 }
 
-.card .btn {
-    display: inline-block;
-    margin-top: 10px;
+nav ul li:hover {
+    background-color: #f48fb1; /* Slightly darker pink */
+    transform: scale(1.1);
 }
 
-/* Hover Effects for Cards */
-.card:hover {
-    border-color: #8d6e63; /* Soft brown */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+/* Buttons */
+button, .btn {
+    background-color: #e57373; /* Soft red */
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 15px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Buttons: Consistent size for links and buttons */
+.btn-action {
+    display: inline-block; /* Ensure consistency with <button> */
+    text-align: center; /* Center the text */
+    padding: 0.5rem 1rem; /* Consistent padding */
+    font-size: 1rem; /* Consistent font size */
+    color: white; /* Button text color */
+    background-color: #e57373; /* Match button background */
+    border: none; /* Remove borders for both */
+    border-radius: 15px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor for <a> */
+    text-decoration: none; /* Remove underline from <a> */
+    transition: all 0.3s ease; /* Add hover effect */
+    min-width: 100px; /* Optional: Ensure buttons have a minimum width */
+}
+
+/* Hover effect for both */
+.btn-action:hover {
+    background-color: #d32f2f; /* Darker red */
+    transform: translateY(-2px); /* Slight lift effect */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Focus/Active effect */
+.btn-action:active {
+    transform: translateY(2px);
+    box-shadow: none;
+}
+
+button:active, .btn:active {
+    transform: translateY(2px);
+    box-shadow: none;
+}
+
+.btn-secondary {
+    background-color: #ba68c8; /* Muted purple */
+}
+
+.btn-secondary:hover {
+    background-color: #9c27b0; /* Rich purple */
 }
 
 /* Profile Picture */
+.profile-picture {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
 .profile-picture img {
-    width: 50px;
-    height: 50px;
     border-radius: 50%;
-    border: 2px solid #fffaf0; /* Soft cream */
-    transition: transform 0.3s, box-shadow 0.3s;
+    width: 150px;
+    height: 150px;
+    border: 4px solid #d7ccc8; /* Light brown border */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
-.profile-picture img:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+/* Card Style for Posts */
+.card {
+    background-color: #ffffff; /* White card background */
+    border: 2px solid #d7ccc8; /* Light brown border */
+    border-radius: 20px;
+    padding: 2rem; /* Increase padding for larger posts */
+    margin: 1.5rem auto; /* Increase margin for spacing */
+    max-width: 1000px; /* Increase max width */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
 }
 
-.profile-picture a {
-    display: inline-block;
+.card:hover {
+    transform: scale(1.02);
+}
+
+.card h3 {
+    color: #4e342e; /* Rich brown */
+    font-size: 1.5rem; /* Larger font size */
+}
+
+.card p {
+    margin: 1rem 0; /* Increase spacing between text */
+}
+
+/* Forms */
+form {
+    background-color: #f8bbd0; /* Soft pink background */
+    padding: 1rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    margin: 1rem auto;
+    max-width: 600px;
+}
+
+form input, form textarea, form select {
+    width: 100%;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    border: 2px solid #d7ccc8; /* Light brown border */
+    border-radius: 10px;
+    font-size: 1rem;
+}
+
+form textarea {
+    height: 80px; /* Smaller comment box */
+}
+
+form button {
+    width: 100%;
+}
+
+/* Comment Section */
+.comment {
+    background-color: #fce4ec; /* Baby pink */
+    border-left: 5px solid #f8bbd0; /* Soft pink accent */
+    padding: 0.5rem; /* Smaller padding for comments */
+    margin: 0.5rem auto;
+    border-radius: 10px;
+    max-width: 800px; /* Adjusted width for consistency */
+}
+
+.comment h4 {
+    color: #880e4f; /* Dark pink */
+    font-size: 1rem; /* Smaller font size for comment headers */
+}
+
+.comment p {
+    font-size: 0.9rem; /* Reduce text size for comments */
+    margin: 0.5rem 0;
+}
+
+/* Video and Audio */
+video, audio {
+    width: 100%;
+    max-width: 600px;
+    margin: 0.5rem auto;
+    border-radius: 10px;
+    border: 2px solid #d7ccc8; /* Light brown */
 }
 
 /* Footer */
 footer {
-    margin-top: 50px;
+    background-color: #d7ccc8; /* Light brown */
+    color: #5d4037; /* Dark brown */
     text-align: center;
-    padding: 10px 0;
-    font-size: 14px;
-    color: #8d6e63;
-    background-color: #fffaf0;
-    border-radius: 15px;
-    border: 1px solid #d7ccc8;
+    padding: 1rem;
+    border-radius: 15px 15px 0 0;
+    margin-top: 2rem;
 }
 
-/* Media Queries */
-@media (max-width: 768px) {
-    .navbar-menu {
-        flex-direction: column;
-        gap: 10px;
-        padding: 10px 0;
-    }
+footer a {
+    color: #b71c1c; /* Red links */
+}
 
-    button, .btn {
-        font-size: 14px;
-        padding: 8px 15px;
-    }
-
-    header {
-        font-size: 20px;
-        padding: 15px 0;
-    }
+footer a:hover {
+    color: #880e4f; /* Dark pink */
 }
